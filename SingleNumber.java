@@ -13,7 +13,7 @@ import java.util.Map;
 public class SingleNumber {
 
 	/**
-	 * XOR:
+	 * Solution using XOR.
 	 * 
 	 * XORing the pairs will result in 0000...000
 	 * 
@@ -32,6 +32,9 @@ public class SingleNumber {
 		return result;
 	}
 
+	/**
+	 * Solution using a Map.
+	 */
 	public static int solveHashMap(int[] array) {
 		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
 		for (int i = 0; i < array.length; i++) {
@@ -52,7 +55,7 @@ public class SingleNumber {
 	}
 
 	public static void main(String[] args) {
-		int[] array = new int[] { 10, 1, 2, 5, 5, 7, 8, 8, 10, 1, 2, 3, 20, 3, 20 }; // 7
+		int[] array = new int[] { 10, 1, 2, 5, 5, 7, 8, 8, 10, 1, 2, 3, 20, 3, 20 };
 		System.out.println(solveBits(array));
 	}
 
