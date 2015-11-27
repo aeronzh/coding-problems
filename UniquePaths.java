@@ -23,7 +23,7 @@ public class UniquePaths {
 	public static int solve(int n, int m) {
 		int[][] dp = new int[n][m];
 
-		// left column
+		// Left column
 		for (int i = 0; i < n; i++) {
 			dp[i][0] = 1;
 		}
