@@ -21,7 +21,7 @@ public class SingleNumber {
 	 * 1101...101 again.
 	 * 
 	 * @param array
-	 * @return
+	 * @return single number.
 	 */
 	public static int solveBits(int[] array) {
 		int result = array[0];
@@ -34,6 +34,9 @@ public class SingleNumber {
 
 	/**
 	 * Solution using a Map.
+	 * 
+	 * @param array
+	 * @return single number.
 	 */
 	public static int solveHashMap(int[] array) {
 		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
