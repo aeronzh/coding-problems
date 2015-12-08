@@ -1,4 +1,4 @@
-package com.lucaslouca.other;
+package problems;
 
 /**
  * Count the number of prime numbers less than a non-negative number, n
