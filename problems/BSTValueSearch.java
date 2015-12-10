@@ -1,4 +1,4 @@
-package com.lucaslouca.other;
+package problems;
 
 /**
  * Given a BST write a function that looks for a value.
