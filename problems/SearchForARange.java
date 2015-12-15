@@ -1,4 +1,4 @@
-package com.lucaslouca.other;
+package problems;
 
 /**
  * Given a sorted array of integers, find the starting and ending position of a
