@@ -1,4 +1,4 @@
-package com.lucaslouca.other;
+package problems;
 
 /**
  * Find the kth largest element in an unsorted array. Note that it is the kth
