@@ -1,4 +1,4 @@
-package problems;
+package com.lucaslouca.other;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -35,14 +35,12 @@ public class LongestSubstrTwoUniqueChars {
 				length = tmp.length();
 
 				char leftChar = tmp.charAt(0);
-				int j = length - 1;
-				int pos = j;
-				while (j >= 0) {
-					if (tmp.charAt(j) == leftChar) {
-						pos = j;
+				int pos = length - 1;
+				while (pos >= 0) {
+					if (tmp.charAt(pos) == leftChar) {
 						break;
 					}
-					j--;
+					pos--;
 				}
 
 				tmp = new StringBuilder(tmp.substring(pos + 1, length));
