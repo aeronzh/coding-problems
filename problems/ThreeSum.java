@@ -50,7 +50,7 @@ public class ThreeSum {
 				j++;
 			}
 		}
-		// -10 -5 -3 -1 0 1 3
+
 		return result;
 	}
 
