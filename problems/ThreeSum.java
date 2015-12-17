@@ -23,30 +23,40 @@ public class ThreeSum {
 	public static List<List<Integer>> solve(int[] array, int target) {
 		List<List<Integer>> result = new ArrayList<List<Integer>>();
 		Arrays.sort(array);
-		// -4 -1 -1 0 1 2
 
 		int sum;
 		for (int i = 0; i < array.length; i++) {
-			for (int j = array.length - 1; j >= i + 1; j--) {
-				sum = array[i] + array[i + 1] + array[j];
-				if (sum == 0) {
-					List<Integer> temp = new ArrayList<Integer>();
-					temp.add(array[i]);
-					temp.add(array[i + 1]);
-					temp.add(array[j]);
-					if (!result.contains(temp)) {
-						result.add(temp);
+			int j = i + 1;
+			while (j < array.length) {
+				int k = array.length - 1;
+				while (k > j) {
+					sum = array[i] + array[j] + array[k];
+					if (sum == 0) {
+						List<Integer> temp = new ArrayList<Integer>();
+						temp.add(array[i]);
+						temp.add(array[j]);
+						temp.add(array[k]);
+						if (!result.contains(temp)) {
+							result.add(temp);
+						}
+						k--;
+					} else if (sum > 0) {
+						k--;
+					} else if (sum < 0) {
+						j++;
 					}
 				}
 
+				j++;
 			}
 		}
-
+		// -10 -5 -3 -1 0 1 3
 		return result;
 	}
 
 	public static void main(String[] args) {
-		int[] array = { -1, 0, 1, 2, -1, -4, 0, 0, 5, -3, -2 };
+		//int[] array = { -10, -5, -3, -1, 0, 1, 3 };
+		int[] array = { -1, 0, 1, 2, -1, -4 };
 		System.out.println(solve(array, 0));
 	}
 
