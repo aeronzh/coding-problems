@@ -1,4 +1,4 @@
-package com.lucaslouca.other;
+package problems;
 
 import java.util.HashMap;
 import java.util.Map;
