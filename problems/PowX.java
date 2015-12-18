@@ -1,4 +1,4 @@
-package com.lucaslouca.other;
+package problems;
 
 /**
  * Implement pow(x, n).
