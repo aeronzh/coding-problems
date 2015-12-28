@@ -12,6 +12,25 @@ package problems;
  */
 public class JumpGame {
 
+	public static boolean solve(int[] a) {
+		int maxReachableIndex = a[0];
+		for (int i = 0; i < a.length; i++) {
+			if (maxReachableIndex <= i && a[i] == 0) {
+				return false;
+			}
+
+			if (i + a[i] > maxReachableIndex) {
+				maxReachableIndex = i + a[i];
+			}
+
+			if (maxReachableIndex >= a.length - 1) {
+				return true;
+			}
+		}
+
+		return true;
+	}
+
 	public static boolean solve(int[] a, int pos, int end) {
 		if (pos == end) {
 			return true;
@@ -28,9 +47,10 @@ public class JumpGame {
 	}
 
 	public static void main(String[] args) {
-		int[] a = { 1, 1, 1, 1, 4 };
+		int[] a = { 3, 2, 1, 0, 4 };
 		int end = a.length - 1;
 		System.out.println(solve(a, 0, end));
+		System.out.println(solve(a));
 	}
 
 }
