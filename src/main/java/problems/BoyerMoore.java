@@ -39,9 +39,10 @@ public class BoyerMoore {
         int m = text.length();
 
         int ti = n - 1;
+        int pi;
         while (ti < m) {
 
-            int pi = n - 1;
+            pi = n - 1;
             while (text.charAt(ti) == pattern.charAt(pi)) {
                 pi--;
                 ti--;
