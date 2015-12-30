@@ -25,6 +25,7 @@ public class BoyerMoore {
 	 * such occurrence. The proposed shift will then be i-j, with O(1) lookup
 	 * time and O(kn) space, assuming a finite alphabet of length k.
 	 * 
+	 * 
 	 * @param p
 	 *            patern
 	 * @return lookup table
