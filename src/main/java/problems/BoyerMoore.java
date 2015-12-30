@@ -54,7 +54,7 @@ public class BoyerMoore {
             int right = lookup[text.charAt(ti)];
 
             // Shift pattern to the right
-            int shift = Math.max(1, pi - right);
+            int shift = pi - right;
             ti += shift;
         }
 
