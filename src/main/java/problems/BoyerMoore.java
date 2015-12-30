@@ -25,7 +25,6 @@ public class BoyerMoore {
         return lookup;
     }
 
-<<<<<<< HEAD
     /**
      * Returns the index of the first occurrence of the pattern string
      * in the text string.
@@ -38,29 +37,6 @@ public class BoyerMoore {
         int[] lookup = preprocess(pattern);
         int n = pattern.length();
         int m = text.length();
-=======
-	/**
-	 * Simple constant-time lookup solution is as follows: create a 2D table
-	 * which is indexed first by the index of the character c in the alphabet
-	 * and second by the index i in the pattern. This lookup will return the
-	 * occurrence of c in P with the next-highest index j<i or -1 if there is no
-	 * such occurrence. The proposed shift will then be i-j, with O(1) lookup
-	 * time and O(kn) space, assuming a finite alphabet of length k.
-	 * 
-	 * 
-	 * @param p
-	 *            patern
-	 * @return lookup table
-	 */
-	private static int[][] preprocess(String p) {
-		final String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-		int k = alphabet.length();
-		int n = p.length();
-		int[][] lookup = new int[k][n];
-		for (int[] row: lookup)
-		    Arrays.fill(row, -1);
-		
->>>>>>> 06429ccef51c280d442078cd21b77c21c2dc8f97
 
         int ti = n - 1;
         while (ti < m) {
