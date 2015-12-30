@@ -3,79 +3,77 @@ package problems;
 import java.util.Arrays;
 
 public class BoyerMoore {
-	private static void print(int[][] matrix) {
-		int n = matrix.length;
-		int k = matrix[0].length;
+    /**
+     * Bad Character Rule
+     * <p/>
+     * Preprocess the pattern string. Returns array with
+     * array[c] = position of rightmost occurrence of c in the pattern
+     *
+     * @param pattern pattern
+     * @return lookup table
+     */
+    private static int[] preprocess(String pattern) {
+        final int alphabet = 256;
+        int n = pattern.length();
+        int[] lookup = new int[alphabet];
+        Arrays.fill(lookup, -1);
 
-		for (int i = 0; i < n; i++) {
-			for (int c = 0; c < k; c++) {
-				System.out.print(matrix[i][c] + " ");
-			}
-			System.out.println();
-		}
+        for (int index = 0; index < n; index++) {
+            lookup[pattern.charAt(index)] = index;
+        }
 
-		System.out.println();
-	}
+        return lookup;
+    }
 
-	/**
-	 * Simple constant-time lookup solution is as follows: create a 2D table
-	 * which is indexed first by the index of the character c in the alphabet
-	 * and second by the index i in the pattern. This lookup will return the
-	 * occurrence of c in P with the next-highest index j<i or -1 if there is no
-	 * such occurrence. The proposed shift will then be i-j, with O(1) lookup
-	 * time and O(kn) space, assuming a finite alphabet of length k.
-	 * 
-	 * @param p
-	 *            patern
-	 * @return lookup table
-	 */
-	private static int[][] preprocess(String p) {
-		final String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-		int k = alphabet.length();
-		int n = p.length();
-		int[][] lookup = new int[k][n];
-		for (int[] row: lookup)
-		    Arrays.fill(row, -1);
-		
+    /**
+     * Returns the index of the first occurrence of the pattern string
+     * in the text string.
+     *
+     * @param pattern
+     * @param text
+     * @return
+     */
+    public static int search(String pattern, String text) {
+        int[] lookup = preprocess(pattern);
+        int n = pattern.length();
+        int m = text.length();
 
-		// bcdad
-		for (int index = 0; index < n; index++) {
-			char c = p.charAt(index);
-			lookup[c - 65][index] = index;
-		
-		}
+        int ti = n - 1;
+        while (ti < m) {
 
-		return lookup;
-	}
+            int pi = n - 1;
+            while (text.charAt(ti) == pattern.charAt(pi)) {
+                pi--;
+                ti--;
+                if (pi < 0) {
+                    return (ti + 1);
+                }
+            }
 
-	public static void search(String p, String text, int[][] lookup) {
-		int n = p.length();
-		int m = text.length();
+            // Not found. Get the position of the right most occurence of text.charAt(ti) in pattern
+            int right = lookup[text.charAt(ti)];
 
-		int ti = n - 1;
-		while (ti < m) {
+            // Shift pattern to the right
+            int shift = Math.max(1, pi - right);
+            ti += shift;
+        }
 
-			int pi = n - 1;
-			while (text.charAt(ti) == p.charAt(pi)) {
-				pi--;
-				ti--;
-				if (pi < 0) {
-					System.out.println("Found at " + ti);
-					return;
-				}
-			}
+        return -1;
+    }
 
-			// Not found. Get next-highest index pj<pi in P for the character in Text at which the comparison process failed
-			// and shift ti by pi-pj and repeat
-			int pj = Math.max(0, lookup[text.charAt(ti)][pi]);			
-			ti += (pi-pj);
-			
-		}
-	}
+    public static void main(String[] args) {
+        String pattern = "abba";
+        String text = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr,"
+                + "sed diam nonumy eirmod tempor invidunt ut labore et dolore"
+                + "magna aliquyam erat, sed diam voluptua. At vero eos et accusam"
+                + "et justo duo dolores et ea rebum. Stet clita kasd gubergren, no"
+                + "sea takimata sanctus est Lorem ipsum dolor sit amet. Loabbarem ipsum"
+                + "dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod"
+                + "tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua."
+                + "At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd "
+                + "gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.";
 
-	public static void main(String[] args) {
-		int[][] lookup = preprocess("bcdad");
-		print(lookup);
-	}
+        System.out.println("result = " + search(pattern, text));
+    }
 
 }
