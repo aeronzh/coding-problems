@@ -3,6 +3,7 @@ package problems;
 import java.util.Arrays;
 
 public class BoyerMoore {
+    
     /**
      * Bad Character Rule
      * <p/>
