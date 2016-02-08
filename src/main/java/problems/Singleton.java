@@ -1,5 +1,6 @@
 package problems;
 
+// Bill Pugh's solution
 public class Singleton {
 	private Singleton() {}
 	
