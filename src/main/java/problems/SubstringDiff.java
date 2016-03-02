@@ -6,8 +6,6 @@ import java.util.Scanner;
 
 public class SubstringDiff {
 
-	static int[][][] dp;
-
 	/**
 	 * Given two strings of length n, P = p1p2...pn and Q = q1q2...qn, we define
 	 * M(i,j,k) as the number of mismatches between p(i),p(i+1),...p(i+k−1) and
@@ -42,17 +40,25 @@ public class SubstringDiff {
 	private static int brute(int s, String p, String q) {
 		int n = p.length();
 		int max = 0;
+		for (int i = 0; i <= n; i++) {
+			for (int j = 0; j <= n; j++) {
+				int tmp = m(i, j, 0, p, q);
+				if (tmp>s) {
+					// skip stuff
+				}
+				for (int l = 1; l <= n; l++) {
 
-		for (int l = n; l >= 0; l--) {
-			for (int i = 0; i <= n - l; i++) {
-				for (int j = 0; j <= n - l; j++) {
-					// System.out.println("i=" + i + "  j=" + j + "  l=" + l);
-					int tmp = m(i, j, l, p, q);
-					// System.out.println("l=" + l + " tmp=" + tmp + " s=" + s +
-					// " i=" + i + "  j=" + j);
-					if (tmp <= s) {
-						return l;
+					if (i + l <= n && j + l <= n) {
+						if (p.charAt(i + l -1) != q.charAt(j + l-1)) {
+							tmp++;
+						}
+						if (tmp <= s) {
+							max = Math.max(max, l);
+						}
+					} else {
+						continue;
 					}
+
 				}
 			}
 		}
@@ -60,7 +66,7 @@ public class SubstringDiff {
 	}
 
 	public static void main(String[] args) throws FileNotFoundException {
-		System.setIn(new FileInputStream(System.getProperty("user.home") + "/" + "in.txt")); // 4
+		System.setIn(new FileInputStream("C:/Temp/in.txt")); // 4
 		// 3
 		// 8
 
@@ -73,15 +79,6 @@ public class SubstringDiff {
 			String p = line[0];
 			String q = line[1];
 			int n = p.length();
-			// dp = new int[n][n][n+1];
-			//
-			// for (int i=0; i<n; i++) {
-			// for (int j=0; j<n; j++) {
-			// for (int c=0; c<=n; c++) {
-			// dp[i][j][c] = -1;
-			// }
-			// }
-			// }
 			System.out.println(brute(s, p, q));
 		}
 	}
