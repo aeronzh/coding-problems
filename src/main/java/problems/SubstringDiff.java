@@ -51,7 +51,7 @@ public class SubstringDiff {
 					// System.out.println("l=" + l + " tmp=" + tmp + " s=" + s +
 					// " i=" + i + "  j=" + j);
 					if (tmp <= s) {
-						max = Math.max(max, l);
+						return l;
 					}
 				}
 			}
