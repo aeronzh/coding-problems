@@ -16,18 +16,14 @@ public class SubstringDiff {
 	 * @param k
 	 * @return
 	 */
-	private static int m(int i, int j, int k, String strP, String strQ) {
-		char[] p = strP.toCharArray();
-		char[] q = strQ.toCharArray();
-
-		int count = 0;
-		for (int c = 0; c < k; c++) {
-			if (p[i + c] != q[j + c]) {
-				count++;
-			}
+	private static int solve(int s, String strP, String strQ) {
+		int n = strP.length();
+		int result = 0;
+		for (int i=0; i<n; i++) {
+			result = Math.max(result,Math.max(brute(s,strP,strQ,0,i), brute(s,strP,strQ,i,0)));
 		}
-
-		return count;
+		
+		return result;
 	}
 
 	/**
@@ -37,31 +33,46 @@ public class SubstringDiff {
 	 * 
 	 * @return
 	 */
-	private static int brute(int s, String p, String q) {
-		int n = p.length();
+	private static int brute(int s, String strP, String strQ, int i, int j) {
+		int n = strP.length();
+		char[] p = strP.toCharArray();
+		char[] q = strQ.toCharArray();
+		int l = 0;
+
+		int diff = 0;
 		int max = 0;
-		for (int i = 0; i <= n; i++) {
-			for (int j = 0; j <= n; j++) {
-				int tmp = m(i, j, 0, p, q);
-				if (tmp>s) {
-					// skip stuff
-				}
-				for (int l = 1; l <= n; l++) {
+		while (true) {
+			//System.out.println("i="+i+"  j="+j+"  l="+l+"  diff="+diff);
+			if (i + l >= n || j + l >= n) {
+				max = Math.max(max, l);
+				break;
+			}
 
-					if (i + l <= n && j + l <= n) {
-						if (p.charAt(i + l -1) != q.charAt(j + l-1)) {
-							tmp++;
-						}
-						if (tmp <= s) {
-							max = Math.max(max, l);
-						}
-					} else {
-						continue;
-					}
+			if (p[i + l] != q[j + l]) {
+				diff++;
+			}
 
+			if (diff > s) {
+				max = Math.max(max, l);
+
+				// shift i,j to the right until we find a p[i] != p[j] we can remove so we can decrease
+				// diff by 1 and make it <= s again. By shifting the i,j positions to the right we simultaneously decrease our length k
+				while (p[i] == q[j]) {
+					i++;
+					j++;
+					l--;
 				}
+
+				// found a p[i] != p[j].
+				diff--;
+				i++;
+				j++; // shift one to the right to remove it
+			} else {
+				l++;
 			}
 		}
+
+
 		return max;
 	}
 
@@ -79,7 +90,7 @@ public class SubstringDiff {
 			String p = line[0];
 			String q = line[1];
 			int n = p.length();
-			System.out.println(brute(s, p, q));
+			System.out.println(solve(s, p, q));
 		}
 	}
 
