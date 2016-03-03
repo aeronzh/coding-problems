@@ -77,9 +77,7 @@ public class SubstringDiff {
 	}
 
 	public static void main(String[] args) throws FileNotFoundException {
-		System.setIn(new FileInputStream("C:/Temp/in.txt")); // 4
-		// 3
-		// 8
+		System.setIn(new FileInputStream(System.getProperty("user.home") + "/" + "in.txt")); 
 
 		Scanner scanner = new Scanner(System.in);
 		int tests = scanner.nextInt();
