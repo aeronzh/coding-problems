@@ -1,6 +1,18 @@
-var sequences:[(tail:Int, size:Int)] = []
+import Foundation
+
+public func getLine() -> String {
+    var buf = String()
+    var c = getchar()
+    // 10 is ascii code for newline
+    while c != EOF && c != 10 {
+        buf.append(UnicodeScalar(UInt32(c)))
+        c = getchar()
+    }
+    return buf
+}
 
 func solve(array:[Int]) -> Int {
+    var sequences:[(tail:Int, size:Int)] = []
     
     for elem in array {
         if (sequences.isEmpty) {
@@ -21,7 +33,7 @@ func solve(array:[Int]) -> Int {
                 } else {
                     // Case 3: elem is in neither the smallest, nor the largest.  
                     // Find the list whose tail is largest but still smaller than elem. 
-                    // Extend that list. Delete all other lists that have the same size as the modified seq.
+                    // Extend that list. Delete all other lists that have the same size.
                     let minMax = (sequences.filter() {$0.tail < elem}).maxElement({$0.tail < $1.tail})
                     let extendedSeq = (tail:elem, size:minMax!.size+1)
                     sequences = sequences.filter() {$0.size != extendedSeq.size} 
@@ -36,5 +48,10 @@ func solve(array:[Int]) -> Int {
     return  sequences.maxElement({$0.size < $1.size})!.size
 }
 
-print(solve([0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15])) // 6
-// 0, 2, 6, 9, 11, 15
+var array:[Int] = []
+let n = Int(getLine())
+for i in 1...n! {
+    array.append(Int(getLine())!)
+}
+
+print(solve(array))
