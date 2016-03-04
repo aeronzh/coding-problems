@@ -7,10 +7,9 @@ func solve(array:[Int]) -> Int {
             sequences.append((tail:elem, size:1))
         } else {
             // Case 1: elem is smallest so far. Start a new sequence
-            let smallest = sequences.minElement({$0.tail > $1.tail})
-            
-            if (elem < smallest?.tail) {
-                sequences.append((tail:elem, size:1))
+            let smallest = sequences[0]
+            if (elem < smallest.tail) {
+                sequences[0] = (tail:elem, size:1)
             } else {
                 // Case 2: elem is larger than all the tails so far. 
                 // Find longest sequence so far and extend it.
@@ -18,19 +17,15 @@ func solve(array:[Int]) -> Int {
                 if (elem > largestTail?.tail) {
                     let longest = sequences.maxElement({$0.size < $1.size})
                     let extendedSeq = (tail:elem, size:longest!.size+1)
-                    if let idx = sequences.indexOf({$0.tail == longest!.tail && $0.size == longest!.size}) {
-                        sequences[idx] = extendedSeq
-                    }
+                    sequences.append(extendedSeq)
                 } else {
                     // Case 3: elem is in neither the smallest, nor the largest.  
                     // Find the list whose tail is largest but still smaller than elem. 
                     // Extend that list. Delete all other lists that have the same size.
                     let minMax = (sequences.filter() {$0.tail < elem}).maxElement({$0.tail < $1.tail})
                     let extendedSeq = (tail:elem, size:minMax!.size+1)
-                    if let idx = sequences.indexOf({$0.tail == minMax!.tail && $0.size == minMax!.size}) {
-                        sequences = sequences.filter() {$0.size == extendedSeq.size} 
-                        sequences[idx] = extendedSeq
-                    }
+                    sequences = sequences.filter() {$0.size != extendedSeq.size} 
+                    sequences.append(extendedSeq)
                     
                 }
             }
