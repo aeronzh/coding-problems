@@ -21,7 +21,7 @@ func solve(array:[Int]) -> Int {
                 } else {
                     // Case 3: elem is in neither the smallest, nor the largest.  
                     // Find the list whose tail is largest but still smaller than elem. 
-                    // Extend that list. Delete all other lists that have the same size.
+                    // Extend that list. Delete all other lists that have the same size as the modified seq.
                     let minMax = (sequences.filter() {$0.tail < elem}).maxElement({$0.tail < $1.tail})
                     let extendedSeq = (tail:elem, size:minMax!.size+1)
                     sequences = sequences.filter() {$0.size != extendedSeq.size} 
