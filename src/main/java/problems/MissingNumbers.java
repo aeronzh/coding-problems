@@ -26,18 +26,17 @@ public class MissingNumbers {
 	private static final int MAX = 10000;
 
 	private static void solve(int[] a, int[] b) {
-		int[] mapA = new int[MAX + 1];
+		int[] map = new int[MAX + 1];
 		for (int num : a) {
-			mapA[num] = mapA[num] + 1;
+			map[num] = map[num] + 1;
 		}
 
-		int[] mapB = new int[MAX + 1];
 		for (int num : b) {
-			mapB[num] = mapB[num] + 1;
+			map[num] = map[num] - 1;
 		}
 
 		for (int i = 0; i <= MAX; i++) {
-			if (mapA[i] != mapB[i]) {
+			if (map[i] != 0) {
 				System.out.print(i + " ");
 			}
 		}
