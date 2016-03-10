@@ -89,75 +89,92 @@ import java.util.Scanner;
  * @author lucas
  */
 public class LegoBlocks {
-    private static final long MODULO = 1000000007;
+	private static final long MODULO = 1000000007;
+	static long[] cache;
 
-    public static long pow(long x, long n, long p) {
-        long result = 1;
-        while (n > 0) {
-            if ((n & 1) == 1) {
-                result = (result * x) % p;
-            }
+	public static long pow(long x, long n, long p) {
+		long result = 1;
+		while (n > 0) {
+			if ((n & 1) == 1) {
+				result = (result * x) % p;
+			}
 
-            x = (x * x) % p;
-            n = n >> 1;
-        }
+			x = (x * x) % p;
+			n = n >> 1;
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    private static long solveSingleRow(int width) {
-        if (width == 0) {
-            return 1;
-        } else if (width < 0) {
-            return 0;
-        } else {
-            return solveSingleRow(width - 1) + solveSingleRow(width - 2) + solveSingleRow(width - 3) + solveSingleRow(width - 4);
-        }
-    }
+	private static long solveSingleRow(int width) {
+		if (width == 0) {
+			return 1;
+		} else if (width < 0) {
+			return 0;
+		} else {
+			if (cache[width] == -1) {
+				cache[width] = (solveSingleRow(width - 1) + solveSingleRow(width - 2) + solveSingleRow(width - 3) + solveSingleRow(width - 4)) % MODULO;
+			}
+			return cache[width];
+		}
+	}
 
-    /**
-     * You have to use dynamic programming to do this. First consider the
-     * problem without the constraint and call this A(H, W) (H = height, W =
-     * width). You probably noticed that A(H, W) = A(1, W) ^ H. i.e. number of
-     * ways to make a single row * number of rows Now let S(W, H) be the number
-     * of solid boards (i.e. with the constraing now) S(H,W) = A(H,W) - Sum(S(H,
-     * L) * A(H, W - L)) [L = 1 ... W - 1] where S(H, L) * A(H, W - L) is number
-     * of non-solid boards with leftmost break at L. i.e. we take the total
-     * number of boards and subtrac the number of boards with the leftmost
-     * vertical break at L for all possible verticals and we avoid repetition
-     * this way as well. Let me know if that explanation helps!
-     */
-    private static long solve(int height, int width) {
-        // {height, depth, length}
-        long[][] a = new long[height + 1][width + 1];
-        long[][] s = new long[height + 1][width + 1];
+	private static long[][] solve(int height, int width) {
+		// {height, depth, length}
+		long[][] a = new long[height + 1][width + 1];
+		long[][] s = new long[height + 1][width + 1];
+		cache = new long[width + 1];
 
-        for (int h = 1; h <= height; h++) {
-            for (int w = 1; w <= width; w++) {
-                a[h][w] = pow(solveSingleRow(w), h, MODULO);
-            }
+		for (int w = 0; w <= width; w++) {
+			cache[w] = -1;
+		}
 
-            for (int w = 1; w <= width; w++) {
-                long bad = 0;
-                for (int l = 1; l <= width - 1; l++) {
-                    bad += (s[h][l] * a[h][width - l]);
-                }
-                s[h][w] = a[h][w] - bad;
-            }
-        }
+		for (int w = 1; w <= Math.min(width, 4); w++) {
+			s[1][w] = 1;
+		}
 
-        return s[height][width];
-    }
+		for (int h = 1; h <= height; h++) {
+			for (int w = 1; w <= width; w++) {
+				long oneRow = solveSingleRow(w);
+				a[h][w] = pow(oneRow, h, MODULO);
+			}
 
-    public static void main(String[] args) throws FileNotFoundException {
-        System.setIn(new FileInputStream(System.getProperty("user.home") + "/" + "in.txt"));
-        Scanner scanner = new Scanner(System.in);
-        int tests = scanner.nextInt();
-        for (int t = 0; t < tests; t++) {
-            int n = scanner.nextInt();
-            int m = scanner.nextInt();
-            System.out.println(solve(n,m));
-        }
-    }
+			for (int w = 1; w <= width; w++) {
+				long bad = 0;
+				for (int l = 1; l <= w - 1; l++) {
+					bad += ((s[h][l] * a[h][w - l]) % MODULO);
+					bad = bad % MODULO;
+				}
+
+				s[h][w] = (a[h][w] - bad) % MODULO;
+			}
+
+		}
+
+		return s;
+	}
+
+	public static void main(String[] args) throws FileNotFoundException {
+		System.setIn(new FileInputStream(System.getProperty("user.home") + "/" + "in.txt"));
+
+		Scanner scanner = new Scanner(System.in);
+
+		int tests = scanner.nextInt();
+
+		long[][] s = solve(1000, 1000);
+
+		for (int t = 0; t < tests; t++) {
+
+			int n = scanner.nextInt();
+			int m = scanner.nextInt();
+			long result = s[n][m];
+			while (result < 0) {
+				result = result + MODULO;
+			}
+
+			System.out.println(result);
+		}
+
+	}
 
 }
