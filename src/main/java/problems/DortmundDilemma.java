@@ -72,6 +72,9 @@ import java.util.Scanner;
 public class DortmundDilemma {
     private static final long MODULO = 1000000009;
     private static final int ALPHABET_SIZE = 26;
+    private static final int MAX_N = 100000;
+    private static final int MAX_K = 26;
+    private static long[][] c;
 
     public static long pow(long x, long n, long p) {
         long result = 1;
@@ -103,48 +106,41 @@ public class DortmundDilemma {
         return (numerator * (pow(denominator, p - 2, p))) % p;
     }
 
-    /**
-     * Let k =2 and n=6
-     * <p/>
-     * Strings starting with a or b:
-     * <p/>
-     * a _ _ _ _ a | b _ _ _ _ b  ==> 2 * (k^(n - 2*1)) - k
-     * <p/>
-     * <p/>
-     * Strings starting with ab or ba:
-     * <p/>
-     * ab _ _ ab | ba _ _ ba ==> 2 * (k^(n - 2*2))
-     * <p/>
-     * <p/>
-     * String starting with aab, aba, baa, abb, bab, bba:
-     * <p/>
-     * ==> 6 * (k^(n - 2*3))
-     *
-     * @param n
-     * @param k
-     */
-    private static long solve(int n, int k) {
-        // Case a, b, ... etc
-        long sum = 0;
-        if (k > 1) {
-            sum = k * (pow(k, (n - 2), MODULO)) - k;
-        } else if (k == 1 && n>1) {
-            return ALPHABET_SIZE;
+    private static long[][] solve(int maxN, int maxK) {
+        long[][] f = new long[maxN + 1][maxK + 1];
+        long[][] g = new long[maxN + 1][maxK + 1];
+        long[][] p = new long[maxN + 1][maxK + 1];
+
+        for (int k = 1; k <= maxK; k++) {
+            for (int n = 1; n <= maxN; n++) {
+                f[n][k] = k;
+            }
+
+            long kn = k;
+            for (int n = 2; n <= maxN; n++) {
+                kn = (kn * k) % MODULO;
+
+                // *k because we are inserting one of k in the middle of the previous word.
+                if (n % 2 == 1) {
+                    f[n][k] = (f[n - 1][k] * k) % MODULO;
+                } else {
+                    // "- f[n / 2][k]" because we want to remove words that have a common prefix/suffix of length half of the word (n/2) that
+                    // has be created by inserting a char in the middle of the previous word (n-1)
+                    f[n][k] = ((f[n - 1][k] * k) % MODULO - f[n / 2][k]);
+                }
+
+                g[n][k] = (kn - f[n][k]) % MODULO;
+
+                p[n][k] = g[n][k];
+                for (int j = 1; j <= k - 1; j++) {
+                    p[n][k] -= ((p[n][j] * c[k][j]) % MODULO);
+                }
+
+            }
+
         }
 
-
-        for (int fixLen = 2; fixLen <= n / 2; fixLen++) {
-            long numOfFixes = pow(k, fixLen, MODULO) - k;
-
-            sum = sum + numOfFixes * (pow(k, (n - 2 * fixLen), MODULO));
-        }
-
-        // BUG: We are counting some words twice. For example:
-        // a _ _ _ _ _ a and aba _ aba
-
-        long cnk = c(ALPHABET_SIZE, k, MODULO);
-
-        return (cnk * sum);
+        return p;
     }
 
 
@@ -156,16 +152,30 @@ public class DortmundDilemma {
 
         int tests = scanner.nextInt();
 
+        c = new long[MAX_K + 1][MAX_K + 1];
+        for (int k = 1; k <= MAX_K; k++) {
+            for (int j = 1; j <= MAX_K; j++) {
+                c[k][j] = c(k, j, MODULO);
+            }
+        }
+
+        long[][] p = solve(MAX_N, MAX_K);
         for (int t = 0; t < tests; t++) {
 
             int n = scanner.nextInt();
             int k = scanner.nextInt();
-            long result = solve(n, k);
+            long cnk = c(ALPHABET_SIZE, k, MODULO);
+            long result = ((cnk * p[n][k]) % MODULO);
+
+            while (result<0) {
+                result += MODULO;
+            }
+
+            System.out.println(result);
 
             long expectedResult = outputScanner.nextLong();
-
             if (result != expectedResult) {
-                System.out.println("got= " + result + "    expected= " + expectedResult + "  input= " + n + " " + k);
+                System.out.println("*** got= " + result + "    expected= " + expectedResult + "  input= " + n + " " + k);
             }
         }
 
