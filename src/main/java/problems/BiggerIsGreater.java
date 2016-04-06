@@ -2,6 +2,7 @@ package problems;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -88,16 +89,31 @@ public class BiggerIsGreater {
 
 			if (i > 0 && ch[i - 1] < ch[j]) {
 				// swap smaller char with larger
+				// That is we brought a large char up to the front.
+				// Next we need to sort the rest
 				char tmp = ch[i - 1];
-				System.out.println("swap "+tmp+ " with "+ch[j]);
 				ch[i - 1] = ch[j];
 				ch[j] = tmp;
-				break;
+
+				// Get head
+				char[] head = new char[i];
+				for (int t = 0; t <= i - 1; t++) {
+					head[t] = ch[t];
+				}
+
+				// Get tail
+				char[] tail = new char[n - (i - 1)];
+				for (int t = i; t <= n; t++) {
+					tail[t - i] = ch[t];
+				}
+
+				// Sort tail
+				Arrays.sort(tail);
+
+				return (new String(head)) + (new String(tail));
 			} else {
-				System.out.println("dec...");
 				j--;
 			}
-			System.out.println(new String(ch));
 		}
 
 		return new String(ch);
@@ -109,13 +125,16 @@ public class BiggerIsGreater {
 
 		Scanner scanner = new Scanner(System.in);
 
-		System.out.println(solve("dkhc"));
-		
-//		int n = scanner.nextInt();
-//		for (int i = 0; i < n; i++) {
-//			String word = scanner.next();
-//			System.out.println(solve(word));
-//		}
+		int n = scanner.nextInt();
+		for (int i = 0; i < n; i++) {
+			String word = scanner.next();
+			String result = solve(word);
+			if (result.equals(word)) {
+				System.out.println("no answer");
+			} else {
+				System.out.println(solve(word));
+			}
+		}
 
 	}
 }
