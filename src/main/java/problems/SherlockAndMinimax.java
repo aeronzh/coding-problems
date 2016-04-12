@@ -44,6 +44,14 @@ import java.util.Scanner;
  *
  */
 public class SherlockAndMinimax {
+	public static void print(int[] a) {
+		for (int i = 0; i < a.length; i++) {
+			System.out.print(a[i] + " ");
+		}
+
+		System.out.println();
+	}
+	
 	// Returns the INDEX of the element in the sorted array a that is the nearest to num
 	private static int search(int[] a, int start, int end, int num, int lastMid) {
 		int mid = start + (end - start) / 2;
@@ -71,15 +79,10 @@ public class SherlockAndMinimax {
 		}
 	}
 
-	// 4 8 8 8 8 8  8 10 21
-	
-	//  8 9 10 11 12 13 14 15 16 17 18 19 20 21
-	//  0 1  0  1  2  3  4  5  5 4   3  2 1  0
-	private static int solve(int[] a, int p, int q) {
+	private static int solve2(int[] a, int p, int q) {
 		int start = 0;
 		int end = a.length - 1;
 
-		long startTime = System.nanoTime();
 		for (int i = 0; i < a.length - 1; i++) {
 			if (a[i] >= p) {
 				start = Math.max(0, i - 1);
@@ -93,10 +96,7 @@ public class SherlockAndMinimax {
 				break;
 			}
 		}
-		long endTime = System.nanoTime();
-		long duration = (endTime - startTime)/1000000000; 
-		System.out.println("Time: "+duration+ "s");
-		
+
 		int max = Integer.MIN_VALUE;
 		int minM = p;
 		int prev = -1;
@@ -118,6 +118,72 @@ public class SherlockAndMinimax {
 		return minM;
 	}
 
+	// Consider the following array:
+	// 4 8 8 8 8 8 8 10 21
+	// and the range 8-20
+	//
+	// 1. we iterate over it in pairs (4,8), (8,8) ... (10,21)
+	// 2. for each pair we consider the middle value. Example (4+8)/2 = 6. So in that case 6 is the maximum distance to 4 as well as 8: 4---(6)---8 which is 2.
+	// If we would choose 5, then |4-5|=1 which is smaller than 2. Remember we want the maximum. So 5 is not the value we want. Same goes if we would have chosen 7 as |8-7|=1 which is smaller than 2.
+	// 3. Now that we have the number '6' for our pair (4,8) we check if 6 is in our range. That is, is '6' a potential M?
+	// Since 6 is not in 8-21 we cannot consider it.
+	//
+	// So we repeat the process for the rest of the pairs (8,8)...(10,21).
+	// For (8,8) we have middle  = (8+8)/2 = 8 which is in the range 8-21 and produces max min distance 0.
+	// For (8,10) we have middle  = (8+10)/2 = 9 which is in the range 8-21 and produces max min distance 1.
+	// For (10,21) we have middle  = (10+21)/2 = 15 which is in the range 8-21 and produces max min distance 5.
+	// Since 15 produces the largest minimum (5) we choose 15 as our M.
+	private static int solve(int[] a, int p, int q) {
+		print(a);
+		
+		int minM = p;
+		int n = a.length;
+		int max = Integer.MIN_VALUE;
+		for (int i=0; i<n-1; i++) {
+			int mid = (a[i]+a[i+1])/2;
+			if (mid>=p && mid<=q) {
+				int tmp = Math.min(Math.abs(a[i]-mid), Math.abs(a[i+1]-mid));
+				if (tmp>max) {
+					max = tmp;
+					minM = mid;
+				}
+			}
+		}
+		
+		
+		// Left end
+		int tmpMin = Integer.MAX_VALUE;
+		for (int i=0; i<n; i++) {
+			int tmp =  Math.abs(a[i]-p);
+			if (tmp<tmpMin) {
+				tmpMin = tmp;
+			}
+		}
+
+		if (tmpMin>=max) {
+			max = tmpMin;
+			minM = p;
+		}
+		
+		
+		// Right end
+		tmpMin = Integer.MAX_VALUE;
+		for (int i=0; i<n; i++) {
+			int tmp =  Math.abs(a[i]-q);
+			if (tmp<tmpMin) {
+				tmpMin = tmp;
+			}
+		}
+
+		if (tmpMin>max) {
+			max = tmpMin;
+			minM = q;
+		}
+		
+		
+		return minM;
+	}
+	
 	public static void main(String[] args) throws FileNotFoundException {
 		System.setIn(new FileInputStream(System.getProperty("user.home") + "/" + "in.txt"));
 		Scanner outputScanner = new Scanner(new FileInputStream(System.getProperty("user.home") + "/" + "out.txt"));
@@ -140,13 +206,9 @@ public class SherlockAndMinimax {
 		int p = scanner.nextInt();
 		int q = scanner.nextInt();
 
-		long startTime = System.nanoTime();
 		int result = solve(a, p, q);
-		long endTime = System.nanoTime();
 		
 		System.out.println(result);
 
-		long duration = (endTime - startTime)/1000000000; 
-		System.out.println("Total: "+duration+ "s");
 	}
 }
