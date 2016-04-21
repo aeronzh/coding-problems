@@ -9,6 +9,10 @@ import java.util.Scanner;
 public class HexagonalGrid {
 	private static final String NO = "NO";
 	private static final String YES = "YES";
+	private static final int EMPTY = 0;
+	private static final int BACK_SLASH = 1;
+	private static final int FORWARD_SLASH = 1;
+	private static final int HORIZONTAL = 1;
 
 	private static void print(int[][] a) {
 		for (int r = 0; r < a.length; r++) {
@@ -43,7 +47,7 @@ public class HexagonalGrid {
 			for (int colOff : offsets) {
 				int offCol = c + colOff;
 
-				if (offRow < rows && offCol < columns && offRow >= 0 && offCol >= 0 && (offRow != r && offCol != c) && a[offRow][offCol] != 1) {
+				if (offRow < rows && offCol < columns && offRow >= 0 && offCol >= 0 && (offRow != r && offCol != c) && a[offRow][offCol] == EMPTY) {
 					neighbors.add(new Integer[] { offRow, offCol });
 				}
 			}
@@ -52,11 +56,6 @@ public class HexagonalGrid {
 		return neighbors;
 	}
 
-	//0100001
-	//1000010
-
-	//#110001
-	//1#10010
 	private static String solve(int[][] a, int r, int c) {
 		//		print(a);
 		//		System.out.println();
@@ -67,120 +66,72 @@ public class HexagonalGrid {
 			String result = NO;
 
 			// Back slash: '\'
-			if (r == 0 && c < a[0].length - 1 && a[r + 1][c] != 1) {
-				a[r][c] = 1;
-				int tmp = a[r + 1][c];
-				a[r + 1][c] = 1;
-				List<Integer[]> neighbors = getAvailableNeighbors(a, (r + 1), (c));
-				for (Integer[] neighbor : neighbors) {
-					result = solve(a, neighbor[0], neighbor[1]);
-					if (YES.equals(result)) {
-						return YES;
-					}
-				}
+			if (r == 0 && c < a[0].length && a[r + 1][c] == EMPTY) {
+				a[r][c] = BACK_SLASH;
+				a[r + 1][c] = BACK_SLASH;
 				result = solve(a);
 				if (YES.equals(result)) {
 					return YES;
 				}
-				a[r + 1][c] = tmp;
-				a[r][c] = 0;
+				a[r + 1][c] = EMPTY;
+				a[r][c] = EMPTY;
 			}
 
-			if (r == 1 && c > 0 && a[r - 1][c] != 1) {
-				a[r][c] = 1;
-				int tmp = a[r - 1][c];
-				a[r - 1][c] = 1;
-				List<Integer[]> neighbors = getAvailableNeighbors(a, (r - 1), (c));
-				for (Integer[] neighbor : neighbors) {
-					result = solve(a, neighbor[0], neighbor[1]);
-					if (YES.equals(result)) {
-						return YES;
-					}
-				}
+			if (r == 1 && c > 0 && a[r - 1][c] == EMPTY) {
+				a[r][c] = BACK_SLASH;
+				a[r - 1][c] = BACK_SLASH;
 				result = solve(a);
 				if (YES.equals(result)) {
 					return YES;
 				}
-				a[r - 1][c] = tmp;
-				a[r][c] = 0;
+				a[r - 1][c] = EMPTY;
+				a[r][c] = EMPTY;
 			}
 
 			// Forward slash: '/'
-			if (r == 0 && c > 0 && a[r + 1][c - 1] != 1) {
-				a[r][c] = 1;
-				int tmp = a[r + 1][c - 1];
-				a[r + 1][c - 1] = 1;
-				List<Integer[]> neighbors = getAvailableNeighbors(a, (r + 1), (c - 1));
-				for (Integer[] neighbor : neighbors) {
-					result = solve(a, neighbor[0], neighbor[1]);
-					if (YES.equals(result)) {
-						return YES;
-					}
-				}
+			if (r == 0 && c > 0 && a[r + 1][c - 1] == EMPTY) {
+				a[r][c] = FORWARD_SLASH;
+				a[r + 1][c - 1] = FORWARD_SLASH;
 				result = solve(a);
 				if (YES.equals(result)) {
 					return YES;
 				}
-				a[r + 1][c - 1] = tmp;
-				a[r][c] = 0;
+				a[r + 1][c - 1] = EMPTY;
+				a[r][c] = EMPTY;
 			}
 
-			if (r == 1 && c < a[0].length - 1 && a[r - 1][c] != 1) {
-				a[r][c] = 1;
-				int tmp = a[r - 1][c];
-				a[r - 1][c] = 1;
-				List<Integer[]> neighbors = getAvailableNeighbors(a, (r - 1), (c));
-				for (Integer[] neighbor : neighbors) {
-					result = solve(a, neighbor[0], neighbor[1]);
-					if (YES.equals(result)) {
-						return YES;
-					}
-				}
+			if (r == 1 && c < a[0].length - 1 && a[r - 1][c] == EMPTY) {
+				a[r][c] = FORWARD_SLASH;
+				a[r - 1][c] = FORWARD_SLASH;
 				result = solve(a);
 				if (YES.equals(result)) {
 					return YES;
 				}
-				a[r - 1][c] = tmp;
-				a[r][c] = 1;
+				a[r - 1][c] = EMPTY;
+				a[r][c] = EMPTY;
 			}
 
 			// Horizontal: '--'
-			if (c < a[0].length - 1 && a[r][c + 1] != 1) {
-				a[r][c] = 1;
-				int tmp = a[r][c + 1];
-				a[r][c + 1] = 1;
-				List<Integer[]> neighbors = getAvailableNeighbors(a, (r), (c + 1));
-				for (Integer[] neighbor : neighbors) {
-					result = solve(a, neighbor[0], neighbor[1]);
-					if (YES.equals(result)) {
-						return YES;
-					}
-				}
+			if (c < a[0].length - 1 && a[r][c + 1] == EMPTY) {
+				a[r][c] = HORIZONTAL;
+				a[r][c + 1] = HORIZONTAL;
 				result = solve(a);
 				if (YES.equals(result)) {
 					return YES;
 				}
-				a[r][c + 1] = tmp;
-				a[r][c] = 0;
+				a[r][c + 1] = EMPTY;
+				a[r][c] = EMPTY;
 			}
 
 			if (c > 0 && a[r][c - 1] != 1) {
-				a[r][c] = 1;
-				int tmp = a[r][c - 1];
-				a[r][c - 1] = 1;
-				List<Integer[]> neighbors = getAvailableNeighbors(a, (r), (c - 1));
-				for (Integer[] neighbor : neighbors) {
-					result = solve(a, neighbor[0], neighbor[1]);
-					if (YES.equals(result)) {
-						return YES;
-					}
-				}
+				a[r][c] = HORIZONTAL;
+				a[r][c - 1] = HORIZONTAL;
 				result = solve(a);
 				if (YES.equals(result)) {
 					return YES;
 				}
-				a[r][c - 1] = tmp;
-				a[r][c] = 0;
+				a[r][c - 1] = EMPTY;
+				a[r][c] = EMPTY;
 			}
 
 			return result;
@@ -236,8 +187,6 @@ public class HexagonalGrid {
 				a[1][i] = splitted[i] - '0';
 			}
 
-			print(a);
-
 			String result = solve(a);
 			String expected = outputScanner.next();
 
@@ -246,7 +195,6 @@ public class HexagonalGrid {
 			} else {
 				System.out.println(result);
 			}
-			System.out.println();
 		}
 
 	}
