@@ -1,5 +1,10 @@
 package problems;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.Scanner;
+
 /**
  * Sherlock is given an array of N integers (A0, A1 ... AN−1) by Watson. Now
  * Watson asks Sherlock how many different pairs of indices i and j exist such
@@ -54,9 +59,50 @@ package problems;
  *
  */
 public class SherlockAndPairs {
+	private static long solve(int[] a) {
+		int n = a.length;
+		long equals = 0;
+		long count = 0;
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		Arrays.sort(a);
+
+		for (int i = 1; i < n; i++) {
+			if (a[i] == a[i - 1]) {
+				if (equals == 0) {
+					equals = 2;
+				} else {
+					equals++;
+				}
+			} else {
+				count += (equals * (equals - 1));
+				equals = 0;
+			}
+		}
+
+		if (equals > 0) {
+			count += (equals * (equals - 1));
+		}
+
+		return count;
+	}
+
+	public static void main(String[] args) throws FileNotFoundException {
+		System.setIn(new FileInputStream(System.getProperty("user.home") + "/" + "in.txt"));
+		Scanner outputScanner = new Scanner(new FileInputStream(System.getProperty("user.home") + "/" + "out.txt"));
+
+		Scanner scanner = new Scanner(System.in);
+
+		int tests = scanner.nextInt();
+
+		for (int t = 0; t < tests; t++) {
+			int n = scanner.nextInt();
+			int[] a = new int[n];
+			for (int i = 0; i < n; i++) {
+				a[i] = scanner.nextInt();
+			}
+
+			System.out.println(solve(a));
+		}
 
 	}
 
