@@ -2,7 +2,6 @@ package problems;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -62,56 +61,83 @@ import java.util.Scanner;
  * 
  * Moves: - 1 - 2 - 1 = 4
  * 
+ * Source:
+ * https://www.quora.com/How-can-I-efficiently-compute-the-number-of-swaps-required-by-slow-sorting-methods-like-insertion-sort-and-bubble-sort-to-sort-a-given-array
+ * 
  * @author lucas
  *
  */
 public class InsertionSortAdvancedAnalysis {
-	private static final int MAX = 10000001;
+	private static class ResultSet {
+		int[] array;
+		long inversions;
+	}
 
-	public static long insertSort(int[] a) {
-		long count = 0;
-
-		int[] occurrence = new int[MAX];
-		for (int i = 0; i < a.length; i++) {
-			occurrence[a[i]] = occurrence[a[i]] + 1;
+	private static void print(int[] a) {
+		for (int n : a) {
+			System.out.print(n + " ");
 		}
+		System.out.println();
+	}
 
-		int[] lessEq = new int[MAX];
-		lessEq[0] = occurrence[0];
-		for (int i = 1; i < MAX; i++) {
-			lessEq[i] = lessEq[i - 1] + occurrence[i];
-		}
+	private static ResultSet merge(int[] left, int[] right) {
+		ResultSet result = new ResultSet();
+		int[] mergedArray = new int[left.length + right.length];
 
-		int[] newIndex = new int[MAX];
-		Arrays.fill(newIndex, -1);
-		int[] sorted = new int[a.length];
-		for (int i = 0; i < a.length; i++) {
-			int num = a[i];
-			int less = lessEq[num] - occurrence[num];
-			if (newIndex[num] == -1) {
-				newIndex[num] = less;
+		int l = 0;
+		int r = 0;
+		int c = 0;
+
+		long inversions = 0;
+
+		while (l < left.length && r < right.length) {
+			if (left[l] <= right[r]) {
+				mergedArray[c++] = left[l++];
+
+				// When we insert left[l] to the result, we have already inserted j numbers to
+				// the right of left[l] that where smaller than left[l] (i.e.: for r>l -> a[r]<a[l])
+				inversions += r;
 			} else {
-				newIndex[num] = newIndex[num] + 1;
-			}
-
-			System.out.println("num = " + num + "  index = " + i + "  newIndex = " + newIndex[num]);
-			sorted[newIndex[num]] = num;
-			
-			if (newIndex[num] < i) {
-				count += Math.abs(i - newIndex[num]);
-			}
-
-		}
-
-		// check if sorted:
-		for (int i=0; i<sorted.length; i++) {
-			if (i>0 && sorted[i]<sorted[i-1]) {
-				System.out.println("Error");
+				mergedArray[c++] = right[r++];
 			}
 		}
 		
-		return count;
+		while (l < left.length) {
+			mergedArray[c++] = left[l++];
+			inversions += r;
+		}
 
+		while (r < right.length) {
+			mergedArray[c++] = right[r++];
+		}
+
+		result.inversions = inversions;
+		result.array = mergedArray;
+
+		return result;
+	}
+
+	private static ResultSet mergeSort(int[] a, int start, int end) {
+		if (start < end) {
+			int middle = (start + end) / 2;
+			ResultSet left = mergeSort(a, start, middle);
+			ResultSet right = mergeSort(a, middle + 1, end);
+			ResultSet mergeResult = merge(left.array, right.array);
+			mergeResult.inversions += (left.inversions + right.inversions);
+			return mergeResult;
+		} else {
+			ResultSet result = new ResultSet();
+			result.array = new int[] { a[start] };
+			return result;
+		}
+	}
+
+	public static long solve(int[] a) {
+		if (a.length > 1) {
+			return mergeSort(a, 0, a.length - 1).inversions;
+		} else {
+			return 0;
+		}
 	}
 
 	public static void main(String[] args) throws FileNotFoundException {
@@ -121,7 +147,7 @@ public class InsertionSortAdvancedAnalysis {
 		Scanner scanner = new Scanner(System.in);
 
 		int tests = scanner.nextInt();
-		
+
 		for (int t = 0; t < tests; t++) {
 			int n = scanner.nextInt();
 			int[] a = new int[n];
@@ -129,7 +155,7 @@ public class InsertionSortAdvancedAnalysis {
 				a[i] = scanner.nextInt();
 			}
 
-			System.out.println(insertSort(a));
+			System.out.println(solve(a));
 		}
 	}
 
