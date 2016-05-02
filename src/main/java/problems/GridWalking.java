@@ -90,9 +90,6 @@ public class GridWalking {
                 }
 
                 long cnk = c(m, k, MODULO);
-                if ((dp[currentDimension][pos[currentDimension]][m - k] * smallerDimensions * cnk) < 0) {
-
-                }
                 total = (total + ((dp[currentDimension][pos[currentDimension]][m - k] * ((smallerDimensions * cnk) % MODULO)) % MODULO)) % MODULO;
 
             }
