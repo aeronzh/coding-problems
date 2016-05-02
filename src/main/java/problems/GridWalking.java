@@ -28,6 +28,7 @@ public class GridWalking {
     private static long[][] cache;
 
     private static long[][] solve1d(int n, int m) {
+        // dp[i][k] = number of ways to take k steps when currently at position i
         long[][] dp = new long[n][m + 1];
 
         // Init dp
@@ -42,8 +43,10 @@ public class GridWalking {
         for (int k = 1; k <= m; k++) {
             for (int i = 0; i < n; i++) {
                 if (i == 0) {
+                    // We are on the left edge
                     dp[i][k] = dp[i + 1][k - 1];
                 } else if (i == n - 1) {
+                    // We are on the right edge
                     dp[i][k] = dp[i - 1][k - 1];
                 } else {
                     dp[i][k] = (dp[i - 1][k - 1] + dp[i + 1][k - 1]) % MODULO;
