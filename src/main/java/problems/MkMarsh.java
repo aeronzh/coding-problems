@@ -4,147 +4,219 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+/**
+ * Mr K has a rectangular land of size m×nm×n. There are marshes in the land
+ * where the fence cannot hold. Mr K wants you to find the perimeter of the
+ * largest rectangular fence that can be built on this land.
+ * 
+ * Input format
+ * 
+ * The first line contains mm and nn. The next mm lines contain nn characters
+ * each describing the state of the land. 'x' (ascii value: 120) if it is a
+ * marsh and '.' ( ascii value:46) otherwise.
+ * 
+ * Constraints
+ * 
+ * 2≤m,n≤500
+ * 
+ * Output Format
+ * 
+ * Output contains a single integer - the largest perimeter. If the rectangular
+ * fence cannot be built, print "impossible" (without quotes).
+ * 
+ * Sample Input:
+ * 
+ * 4 5
+ * 
+ * .....
+ * 
+ * .x.x.
+ * 
+ * .....
+ * 
+ * .....
+ * 
+ * 
+ * Output
+ * 
+ * 14
+ * 
+ * Fence can be put up across the entire land owned by Mr K. The perimeter is
+ * 2∗(4−1)+2∗(5−1)=142∗(4−1)+2∗(5−1)=14.
+ * 
+ * 
+ * 
+ * Sample Input:
+ * 
+ * 2 2
+ * 
+ * .x
+ * 
+ * x.
+ * 
+ * Output
+ * 
+ * impossible
+ * 
+ * 
+ * We need minimum of 4 points to place the 4 corners of the fence. Hence,
+ * impossible.
+ * 
+ * Sample Input:
+ * 
+ * 2 5
+ * 
+ * .....
+ * 
+ * xxxx.
+ * 
+ * 
+ * 
+ * Output
+ * 
+ * impossible
+ * 
+ * @author lucas
+ *
+ */
 public class MkMarsh {
-    private static int max = Integer.MIN_VALUE;
 
-    private static final int EMPTY = 0;
-    private static final int VISITED = 2;
+	// For any given input, if we create matrices (2D arrays) which store the maximum number of squares in any 
+	// given direction without marsh with respect to current square, then just by checking the values in the 
+	// matrices we would know how far is the mesh. The matrices (up and left) for the sample inputs would be :
+	// 	Input             Up matrix             Left matrix
+	// 
+	// 	2 2
+	// 	.x                   0 -1                    0 -1
+	// 	x.                  -1  0                   -1  0
+	// 
+	// 
+	// 	4 5
+	// 	.....           0  0  0  0  0           0  1  2  3  4
+	// 	.x.x.           1 -1  1 -1  1           0 -1  0 -1  0
+	// 	.....           2  0  2  0  2           0  1  2  3  4
+	// 	.....           3  1  3  1  3           0  1  2  3  4
+	// 
+	// The matrices above have -1 if the square has marsh, otherwise the value gives the number of steps we can 
+	// take in respective directions without hitting the marsh. If we choose one corner for the fence, say bottom-right, 
+	// the Up-matrix lets us know how far we can go upwards and the Left-matrix tells how far we can go towards left 
+	// without hitting the marsh.
+	// 
+	// Thus, pre-calculating these matrices once, allows us to check just the corners of possible fence, reducing a lot of 
+	// computations at every step.
 
-    private static final int UP = 2;
-    private static final int DOWN = 2;
-    private static final int LEFT = 2;
-    private static final int RIGHT = 2;
+	private static final int MARSH = 1;
 
-    private static void print(int[][] a) {
-        int m = a.length;
-        int n = a[0].length;
+	private static void print(int[][] a) {
+		int m = a.length;
+		int n = a[0].length;
 
-        for (int r = 0; r < m; r++) {
-            for (int c = 0; c < n; c++) {
-                System.out.print(a[r][c] + " ");
-            }
-            System.out.println();
-        }
+		for (int r = 0; r < m; r++) {
+			for (int c = 0; c < n; c++) {
+				System.out.print(a[r][c] + " ");
+			}
+			System.out.println();
+		}
 
-        System.out.println();
-    }
+		System.out.println();
+	}
 
-    private static void solve(int[][] a, int r, int c, int count) {
-        int rows = a.length;
-        int columns = a[0].length;
+	private static int[][] preComputeUpMatrix(int[][] a) {
+		int m = a.length;
+		int n = a[0].length;
 
-        a[r][c] = VISITED;
+		int[][] up = new int[m][n];
 
-        if ((r > 0 && c < columns - 1 && a[r - 1][c + 1] == VISITED) && (r > 0 && a[r - 1][c] == VISITED)) {
+		for (int r = 1; r < m; r++) {
+			for (int c = 0; c < n; c++) {
+				if (a[r][c] == MARSH) {
+					up[r][c] = -1;
+				} else {
+					up[r][c] = up[r - 1][c] + 1;
+				}
+			}
+		}
 
-            // Check rectangle
-            int tmp = 0;
-            int row = r-1;
-            int col = c;
-            int up = 0;
-            int down = 0;
-            int left = 0;
-            int right = 0;
-            while (col<columns-1 && a[row][col] == VISITED) {
-                col++;
-                tmp++;
-                up++;
-            }
+		return up;
+	}
 
-            while (row<rows-1 && a[row][col] == VISITED) {
-                row++;
-                tmp++;
-                right++;
-            }
+	private static int[][] preComputeLeftMatrix(int[][] a) {
+		int m = a.length;
+		int n = a[0].length;
 
-            while (col>0 && a[row][col] == VISITED) {
-                col--;
-                tmp++;
-                down++;
-            }
+		int[][] left = new int[m][n];
 
-            while (row>0 && a[row][col] == VISITED) {
-                row--;
-                tmp++;
-                left++;
-            }
+		for (int r = 0; r < m; r++) {
+			for (int c = 1; c < n; c++) {
+				if (a[r][c] == MARSH) {
+					left[r][c] = -1;
+				} else {
+					left[r][c] = left[r][c - 1] + 1;
+				}
+			}
+		}
 
-            if (up==down && left==right) {
-//                System.out.println("End = "+(r-1)+", "+c);
-//                System.out.println("up = " + up);
-//                System.out.println("right = " + right);
-//                System.out.println("down = " + down);
-//                System.out.println("left = " + left);
-                if (tmp>max) {
-                    max = tmp;
-                }
-            }
-        }
+		return left;
+	}
 
+	private static void solve(int[][] a) {
+		int[][] up = preComputeUpMatrix(a);
+		int[][] left = preComputeLeftMatrix(a);
 
-        // Go right
-        if (c < columns - 1 && a[r][c + 1] == EMPTY) {
-            solve(a, r, c + 1, count+1);
-        }
+		int m = up.length;
+		int n = up[0].length;
 
-        // Go down
-        if (r < rows - 1 && a[r + 1][c] == EMPTY) {
-            solve(a, r + 1, c, count+1);
-        }
+		//print(up);
 
+		int max = Integer.MIN_VALUE;
+		for (int r = m - 1; r >= 0; r--) {
+			for (int c = n - 1; c >= 0; c--) {
+				if (up[r][c] != -1 && left[r][c] != -1) {
+					int upRight = up[r][c];
+					int bottom = left[r][c];
 
-        // Go left
-        if (c > 0 && a[r][c - 1] == EMPTY) {
-            solve(a, r, c - 1, count+1);
-        }
+					int top = left[r - upRight][c];
+					int upLeft = up[r][c - bottom];
 
-        // Go up
-        if (r > 0 && a[r - 1][c] == EMPTY) {
-            solve(a, r - 1, c, count+1);
-        }
+					
+					int tmp = upLeft + upRight + (top) + (bottom);
 
-        a[r][c] = EMPTY;
-    }
+					if (upRight == upLeft && top == bottom) {
 
+						if (tmp > max) {
+							max = tmp;
+						}
+					}
 
-    private static void solve(int[][] a) {
-        int m = a.length;
-        for (int r = 0; r < m; r++) {
-            int n = a[r].length;
-            for (int c = 0; c < n; c++) {
-                if (a[r][c] == EMPTY) {
-                    solve(a, r, c, 1);
-                }
-            }
-        }
+				}
+			}
+		}
 
-        if (max>Integer.MIN_VALUE) {
-            System.out.println(max);
-        } else {
-            System.out.println("impossible");
-        }
-    }
+		if (max > Integer.MIN_VALUE) {
+			System.out.println(max);
+		} else {
+			System.out.println("impossible");
+		}
+	}
 
+	public static void main(String[] args) throws FileNotFoundException {
+		System.setIn(new FileInputStream(System.getProperty("user.home") + "/" + "in.txt"));
+		Scanner outputScanner = new Scanner(new FileInputStream(System.getProperty("user.home") + "/" + "out.txt"));
 
-    public static void main(String[] args) throws FileNotFoundException {
-        System.setIn(new FileInputStream(System.getProperty("user.home") + "/" + "in.txt"));
-        Scanner outputScanner = new Scanner(new FileInputStream(System.getProperty("user.home") + "/" + "out.txt"));
+		Scanner scanner = new Scanner(System.in);
+		int m = scanner.nextInt();
+		int n = scanner.nextInt();
 
-        Scanner scanner = new Scanner(System.in);
-        int m = scanner.nextInt();
-        int n = scanner.nextInt();
+		int[][] a = new int[m][n];
+		for (int r = 0; r < m; r++) {
+			char[] line = scanner.next().toCharArray();
+			for (int c = 0; c < n; c++) {
+				if (line[c] == 'x') {
+					a[r][c] = MARSH;
+				}
+			}
+		}
 
-        int[][] a = new int[m][n];
-        for (int r = 0; r < m; r++) {
-            char[] line = scanner.next().toCharArray();
-            for (int c = 0; c < n; c++) {
-                if (line[c] == 'x') {
-                    a[r][c] = 1;
-                }
-            }
-        }
-
-        solve(a);
-//        print(a);
-    }
+		solve(a);
+	}
 }
