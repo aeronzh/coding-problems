@@ -127,6 +127,12 @@ public class MkMarsh {
 
 		int[][] up = new int[m][n];
 
+		for (int c = 0; c < n; c++) {
+			if (a[0][c] == MARSH) {
+				up[0][c] = -1;
+			}
+		}
+
 		for (int r = 1; r < m; r++) {
 			for (int c = 0; c < n; c++) {
 				if (a[r][c] == MARSH) {
@@ -140,11 +146,42 @@ public class MkMarsh {
 		return up;
 	}
 
+	private static int[][] preComputeDownMatrix(int[][] a) {
+		int m = a.length;
+		int n = a[0].length;
+
+		int[][] down = new int[m][n];
+
+		for (int r = 0; r < m; r++) {
+			if (a[r][0] == MARSH) {
+				down[r][0] = -1;
+			}
+		}
+
+		for (int r = m - 2; r >= 0; r--) {
+			for (int c = n - 1; c >= 0; c--) {
+				if (a[r][c] == MARSH) {
+					down[r][c] = -1;
+				} else {
+					down[r][c] = down[r + 1][c] + 1;
+				}
+			}
+		}
+
+		return down;
+	}
+
 	private static int[][] preComputeLeftMatrix(int[][] a) {
 		int m = a.length;
 		int n = a[0].length;
 
 		int[][] left = new int[m][n];
+
+		for (int r = 0; r < m; r++) {
+			if (a[r][0] == MARSH) {
+				left[r][0] = -1;
+			}
+		}
 
 		for (int r = 0; r < m; r++) {
 			for (int c = 1; c < n; c++) {
@@ -159,35 +196,59 @@ public class MkMarsh {
 		return left;
 	}
 
+	private static int[][] preComputeRightMatrix(int[][] a) {
+		int m = a.length;
+		int n = a[0].length;
+
+		int[][] right = new int[m][n];
+
+		for (int r = 0; r < m; r++) {
+			if (a[r][n - 1] == MARSH) {
+				right[r][n - 1] = -1;
+			}
+		}
+
+		for (int r = m - 1; r >= 0; r--) {
+			for (int c = n - 2; c >= 0; c--) {
+				if (a[r][c] == MARSH) {
+					right[r][c] = -1;
+				} else {
+					right[r][c] = right[r][c + 1] + 1;
+				}
+			}
+		}
+
+		return right;
+	}
+
 	private static void solve(int[][] a) {
 		int[][] up = preComputeUpMatrix(a);
 		int[][] left = preComputeLeftMatrix(a);
+		int[][] right = preComputeRightMatrix(a);
+		int[][] down = preComputeDownMatrix(a);
 
-		int m = up.length;
-		int n = up[0].length;
-
-		//print(up);
+		int m = a.length;
+		int n = a[0].length;
 
 		int max = Integer.MIN_VALUE;
-		for (int r = m - 1; r >= 0; r--) {
-			for (int c = n - 1; c >= 0; c--) {
-				if (up[r][c] != -1 && left[r][c] != -1) {
-					int upRight = up[r][c];
-					int bottom = left[r][c];
+		for (int row = m - 1; row >= 0; row--) {
+			for (int col = n - 1; col >= 0; col--) {
+				if (a[row][col] != MARSH) {
+					int u = up[row][col];
+					int l = left[row][col];
 
-					int top = left[r - upRight][c];
-					int upLeft = up[r][c - bottom];
-
-					
-					int tmp = upLeft + upRight + (top) + (bottom);
-
-					if (upRight == upLeft && top == bottom) {
-
-						if (tmp > max) {
-							max = tmp;
+					for (int tu = 1; tu <= u; tu++) {
+						for (int tl = 1; tl <= l; tl++) {
+							int d = down[row - tu][col - tl];
+							int r = right[row - tu][col - tl];
+							if (d >= tu && r >= tl) {
+								int tmp = 2 * tu + 2 * tl;
+								if (tmp > max) {
+									max = tmp;
+								}
+							}
 						}
 					}
-
 				}
 			}
 		}
@@ -201,7 +262,6 @@ public class MkMarsh {
 
 	public static void main(String[] args) throws FileNotFoundException {
 		System.setIn(new FileInputStream(System.getProperty("user.home") + "/" + "in.txt"));
-		Scanner outputScanner = new Scanner(new FileInputStream(System.getProperty("user.home") + "/" + "out.txt"));
 
 		Scanner scanner = new Scanner(System.in);
 		int m = scanner.nextInt();
