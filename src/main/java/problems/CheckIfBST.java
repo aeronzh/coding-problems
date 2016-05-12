@@ -1,6 +1,6 @@
 package problems;
 
-import com.lucaslouca.datastructures.MyBinaryTreeNode;
+import datastructures.MyBinaryTreeNode;
 
 public class CheckIfBST {
 
