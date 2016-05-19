@@ -41,7 +41,7 @@ import java.util.*;
  * @author lucas
  *
  */
-public class Solution {
+public class MaximizeSumBST {
     static class BSTNode {
         private long value;
         private BSTNode left = null;
