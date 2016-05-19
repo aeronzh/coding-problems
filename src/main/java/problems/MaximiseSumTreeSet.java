@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.InputMismatchException;
+import java.util.Scanner;
 import java.util.TreeSet;
 
 /**
@@ -163,6 +164,7 @@ public class MaximiseSumTreeSet {
 
         TreeSet<Long> set = new TreeSet<Long>();
         long max = s[0];
+        set.add(s[0]);
         for (int i=1; i<n; i++) {
             set.add(s[i]);
             
@@ -178,10 +180,20 @@ public class MaximiseSumTreeSet {
 
         return max;
     }
+    
+    private static void print(long[] a) {
+    	for (int i=0; i<a.length; i++) {
+    		System.out.print(a[i]+" ");
+    	}
+    	System.out.println();
+    }
 
     public static void main(String[] args) throws FileNotFoundException {
 		System.setIn(new FileInputStream(System.getProperty("user.home") + "/" + "in.txt"));
         FasterScanner scanner = new FasterScanner(System.in);
+        
+		Scanner output = new Scanner(new FileInputStream(System.getProperty("user.home") + "/" + "out.txt"));
+        
         int tests = scanner.nextInt();
         for (int t = 1; t <= tests; t++) {
             int n = scanner.nextInt();
@@ -191,7 +203,16 @@ public class MaximiseSumTreeSet {
                 a[i] = scanner.nextLong();
             }
 
-            System.out.println(solve(a, m));
+            long result = solve(a, m);
+            long expected = output.nextLong();
+            if (result != expected) {
+            	System.out.println("Got "+result + " but expected "+expected);
+            	print(a);
+            	System.out.println();
+            } else {            	
+            	System.out.println(result);
+            }
+            
         }
     }
 
