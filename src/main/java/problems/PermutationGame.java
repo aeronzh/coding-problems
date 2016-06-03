@@ -2,6 +2,8 @@ package problems;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -41,62 +43,133 @@ public class PermutationGame {
 		System.out.println();
 	}
 
-	private static boolean isIncreasing(int[] a) {
-		for (int i = 1; i < a.length; i++) {
-			if (a[i] != 0 && a[i] <= a[i - 1]) {
+	/**
+	 * Returns true if the sequence a represented by mask is strictly increasing
+	 * 
+	 * Example: a: 5 3 2 1 4 mask: 0 0 0 1 1 --> Returns true
+	 * 
+	 * @param a
+	 * @param mask
+	 * @return
+	 */
+	private static boolean isIncreasing(int[] a, int mask) {
+		int n = a.length;
+		int lastNonZero = 0;
+		while (lastNonZero < n && (mask & (1 << (n - lastNonZero - 1))) == 0) {
+			lastNonZero++;
+		}
+
+		int i = lastNonZero + 1;
+		while (i < n && (mask & (1 << (n - i - 1))) == 0) {
+			i++;
+		}
+
+		while (i < n) {
+			if (a[i] <= a[lastNonZero]) {
 				return false;
+			}
+
+			lastNonZero = i;
+			i++;
+
+			while (i < n && (mask & (1 << (n - i - 1))) == 0) {
+				i++;
 			}
 		}
 
 		return true;
 	}
 
-	private static boolean alice = true;
+	/**
+	 * Given a mask 10110 it returns the direct next mask that can be derived by
+	 * zeroing out a set bit.
+	 * 
+	 * Example: 10110 --> 10100 10010 110
+	 * 
+	 * @param mask
+	 * @return
+	 */
+	private static List<Integer> nextMask(int mask) {
+		//		System.out.print(Integer.toBinaryString(mask) + " --> ");
 
-	// Bob
-	// 12 10 5 3 4 9 7 2 1 8 13 6 11
-	// 7
-	private static int inversions(int[] a, int n) {
-		int inversions = 0;
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < n; j++) {
-				if (i < j && a[i] > a[j] && a[i] != 0 && a[j] != 0) {
-					inversions++;
-				}
+		List<Integer> list = new ArrayList<Integer>();
+		int bit = 1;
+		while (bit <= mask) {
+			int newMask = mask;
+			while (bit <= mask && ((mask & bit) == 0)) {
+				bit = bit << 1;
+			}
+
+			newMask &= ~(bit);
+			list.add(newMask);
+			bit = bit << 1;
+		}
+
+		//		for (int nextMask : list) {
+		//			System.out.print(Integer.toBinaryString(nextMask) + "  ");
+		//		}
+		//		System.out.println();
+
+		return list;
+	}
+
+	private static boolean isWinning(boolean[] isIncreasing, List<Integer>[] next, int current) {
+		for (int nextMove : next[current]) {
+			if (!isIncreasing[nextMove]) {
+				return false;
 			}
 		}
 
-		return inversions;
+		return true;
 	}
+	
+	private static void generateWinningArray(boolean[] isIncreasing, List<Integer>[] next, int max, int current, boolean[] winning) {
 
-	private static String result;
-	private static int aliceCount = 0;
-	private static int bobCount = 0;
-
-	private static void brute(int[] a, Player p, int n) {
-		result = p.toString();
-
-		int inversions = inversions(a, n);
-		if (inversions > 1) {
-			for (int i = 0; i < n; i++) {
-				if (a[i] != 0) {
-					int tmp = a[i];
-					a[i] = 0;
-					inversions = inversions(a, n);
-					boolean optimal = (inversions % 2 == 1);
-					if (optimal) {
-						Player next = (p == Player.Alice) ? Player.Bob : Player.Alice;
-						brute(a, next, n);
-					}
-					a[i] = tmp;
+		if (next[current].size() == 1) {
+			winning[current] = false;
+		} else {
+			
+			for (int child : next[current]) {
+				generateWinningArray(isIncreasing, next, max, child, winning);
+			}
+			
+			boolean allChildsLose = true;
+			for (int child : next[current]) {
+				if (winning[child]) {
+					allChildsLose = false;
 				}
 			}
-		} else {
-			if (p == Player.Alice) {
-				bobCount++;
+			
+			if (!allChildsLose) {
+				winning[current] = false;
 			} else {
-				aliceCount++;
+				winning[current] = true;
 			}
+			
+			if (isIncreasing[current]) {
+				winning[current] = false;
+			} 
+		}
+	}
+
+	private static void solve(int[] a) {
+		int n = a.length;
+
+		// isIncreasing[i] = true if seq with mask i is an increasing seq, thus player given that mask looses. False otherwise.
+		int max = (1 << n);
+		boolean[] isIncreasing = new boolean[max];
+		List<Integer>[] next = new ArrayList[max];
+
+		for (int i = 1; i <= max - 1; i++) {
+			isIncreasing[i] = isIncreasing(a, i);
+			next[i] = nextMask(i);
+		}
+		
+		boolean[] winning = new boolean[max];
+		generateWinningArray(isIncreasing, next, max, (max-1), winning);
+		
+		for (int i = 1; i <= max - 1; i++) {
+			System.out.println(Integer.toBinaryString(i) + (winning[i] ? " --> winning" : ""));
 		}
 	}
 
@@ -107,9 +180,6 @@ public class PermutationGame {
 
 		int tests = scanner.nextInt();
 		for (int t = 0; t < tests; t++) {
-			aliceCount = 0;
-			bobCount = 0;
-			result = "";
 
 			int n = scanner.nextInt();
 			int[] a = new int[n];
@@ -117,15 +187,7 @@ public class PermutationGame {
 				a[i] = scanner.nextInt();
 			}
 
-			brute(a, Player.Alice, n);
-
-			String expected = output.next();
-
-			if (result.equals(expected)) {
-				System.out.println(result);
-			} else {
-				System.out.println("*** Got " + result + "  expected: " + expected);
-			}
+			solve(a);
 		}
 
 	}
