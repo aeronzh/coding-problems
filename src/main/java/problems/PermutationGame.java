@@ -171,6 +171,15 @@ public class PermutationGame {
 		for (int i = 1; i <= max - 1; i++) {
 			System.out.println(Integer.toBinaryString(i) + (winning[i] ? " --> winning" : ""));
 		}
+		
+		for (int child:next[max-1]) {
+			if (!winning[child]) {
+				System.out.println("Alice");
+				return;
+			}
+		}
+		
+		System.out.println("Bob");
 	}
 
 	public static void main(String[] args) throws FileNotFoundException {
