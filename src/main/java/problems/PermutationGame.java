@@ -145,6 +145,10 @@ public class PermutationGame {
 			} else {
 				winning[current] = true;
 			}
+			
+			if (isIncreasing[current]) {
+				winning[current] = false;
+			} 
 		}
 	}
 
