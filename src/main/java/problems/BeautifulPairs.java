@@ -2,6 +2,7 @@ package problems;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -41,10 +42,76 @@ import java.util.Scanner;
  *
  */
 public class BeautifulPairs {
+	private static final int MAX = 1000;
+
+	private static class NumberCount implements Comparable<NumberCount> {
+		int num;
+		int count;
+
+		public int compareTo(NumberCount anotherObject) {
+			if (!(anotherObject instanceof NumberCount))
+				throw new ClassCastException("A NumberCount object expected.");
+			int anotherCount = ((NumberCount) anotherObject).count;
+			return this.count - anotherCount;
+		}
+	}
+
+	private static void print(int[] a) {
+		for (int i = 0; i < a.length; i++) {
+			System.out.print(a[i] + " ");
+		}
+		System.out.println();
+	}
 
 	private static void solve(int[] a, int[] b) {
+		int n = a.length;
+		NumberCount[] countA = new NumberCount[MAX + 1];
+		NumberCount[] countB = new NumberCount[MAX + 1];
+
+		for (int i = 0; i <= MAX; i++) {
+			countA[i] = new NumberCount();
+			countB[i] = new NumberCount();
+		}
+
+		for (int i = 0; i < n; i++) {
+			countA[a[i]].num = a[i];
+			countA[a[i]].count++;
+
+			countB[b[i]].num = a[i];
+			countB[b[i]].count++;
+		}
+
+		Arrays.sort(countA);
+
+		int count = 0;
+		for (int i = 0; i <= MAX; i++) {
+			count += (countA[i].count * countB[i].count);
+		}
+		System.out.println(count);
 
 	}
+
+	//	private static void solve(int[] a, int[] b) {
+	//		int n = a.length;
+	//		int[] countA = new int[MAX + 1];
+	//		int[] countB = new int[MAX + 1];
+	//
+	//		for (int i = 0; i < n; i++) {
+	//			countA[a[i]] = countA[a[i]] + 1;
+	//			countB[b[i]] = countB[b[i]] + 1;
+	//		}
+	//
+	//		print(countA);
+	//		print(countB);
+	//
+	//		int count = 0;
+	//		for (int i = 0; i <= MAX; i++) {
+	//			count += (countA[i] * countB[i]);
+	//		}
+	//
+	//		System.out.println(count);
+	//
+	//	}
 
 	public static void main(String[] args) throws FileNotFoundException {
 		System.setIn(new FileInputStream(System.getProperty("user.home") + "/" + "in.txt"));
@@ -63,5 +130,6 @@ public class BeautifulPairs {
 			b[i] = scanner.nextInt();
 		}
 
+		solve(a, b);
 	}
 }
