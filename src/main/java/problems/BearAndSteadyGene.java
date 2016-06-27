@@ -2,9 +2,7 @@ package problems;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -47,13 +45,13 @@ import java.util.Scanner;
  * 
  * Sample Output
  * 
- * 5 
+ * 5
  * 
  * Explanation
  * 
- * One optimal solution is to replace a substring AAATA with TTCCG,
- * resulting in GTTCCGAA. The replaced substring has length 5, so we
- * print 5 on a new line.
+ * One optimal solution is to replace a substring AAATA with TTCCG, resulting in
+ * GTTCCGAA. The replaced substring has length 5, so weFTSE 100 print 5 on a new
+ * line.
  * 
  * @author lucas
  *
@@ -69,73 +67,56 @@ import java.util.Scanner;
 // need = n/4 = 2
 public class BearAndSteadyGene {
 
-	private static void solve(String str, int n) {	
+	private static boolean inLimits(Map<Character, Integer> map, int limit) {
+		if (map.get('A') <= limit && map.get('G') <= limit && map.get('C') <= limit && map.get('T') <= limit) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private static void solve(String str, int n) {
 		Map<Character, Integer> map = new HashMap<Character, Integer>();
 		map.put('A', 0);
 		map.put('G', 0);
 		map.put('C', 0);
 		map.put('T', 0);
-		
-		for (char c:str.toCharArray()) {
-			map.put(c, map.get(c)+1);
-		}
-		
-		int reqNum = n/4;
-		
-		int minLength = 0;
-		int toAddTotal = 0;
-		for (Character c:map.keySet()) {
-			int tmp = reqNum - map.get(c);
-			if (tmp < 0) {
-				minLength += Math.abs(tmp);
-			} else {
-				toAddTotal += tmp;
-			}
-		}
-		
-		List<String> subs = new ArrayList<String>();
-		for (int len=minLength; len<=n; len++) {
-			for (int i=0; i<=n-len; i++) {
-				String subStr = str.substring(i, i+len);
-				boolean keepSubStr = true;
-				for (Character c:map.keySet()) {
-					int charCount = subStr.length() - subStr.replace(""+c, "").length();
-					int mapCount = reqNum - map.get(c);
-					if (mapCount<0) {
-						// we need to remove character c
-						if (Math.abs(mapCount)==charCount) {
 
-						} else {
-							keepSubStr = false;
-							break;
-						}
-					}
-				}
-				
-				if (keepSubStr) {
-					subs.add(subStr);
-				}
-			}
+		char[] arr = str.toCharArray();
+		int limit = n / 4;
+
+		for (int i = 0; i < n; i++) {
+			map.put(arr[i], map.get(arr[i]) + 1);
 		}
-		
-		for (String subStr:subs) {
-			int toBeRemoved = 0;
-			for (Character c:map.keySet()) {
-				int mapCount = reqNum - map.get(c);
-				if (mapCount<0) {
-					toBeRemoved += Math.abs(mapCount);
+
+		if (inLimits(map, limit)) {
+			System.out.println("0");
+			return;
+		}
+
+		int len = n;
+		int right = 0;
+		for (int left = 0; left < n; left++) {
+			while (!inLimits(map, limit)) {
+				if (right == n) {
+					System.out.println(len);
+					return;
 				}
+
+				// add rightmost to substring. That is, decrease the current count as we will be removing it with the substring.
+				map.put(arr[right], map.get(arr[right]) - 1);
+				right++;
 			}
 			
-			if (toBeRemoved == toAddTotal) {
-				System.out.println(subStr.length());
-				break;
-			}
-		}
-		
+			// System.out.println("["+left+", "+right+"] -> "+(right - left));
 
+			len = Math.min(len, right - left);
+			map.put(arr[left], map.get(arr[left]) + 1);
+		}
+
+		System.out.println(len);
 	}
-	
+
 	public static void main(String[] args) throws FileNotFoundException {
 		System.setIn(new FileInputStream(System.getProperty("user.home") + "/" + "in.txt"));
 		Scanner scanner = new Scanner(System.in);
@@ -143,7 +124,5 @@ public class BearAndSteadyGene {
 		String str = scanner.next();
 		solve(str, n);
 	}
-	
-	
 
 }
