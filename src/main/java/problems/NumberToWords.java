@@ -29,7 +29,7 @@ public class NumberToWords {
 		}
 
 		if (n >= 100) {
-			return num[(int)(n/100)] + SPACE +  "hundred" + SPACE +  ans;
+			return num[(int)(n/100)] + SPACE +  "Hundred" + SPACE +  ans;
 		} else {
 			return ans;
 		}
