@@ -46,6 +46,9 @@ public class RichieRich {
 			return;
 		}
 
+
+        int[] change = new int[n];
+
 		// 6 3
 		// 092282
 		// -> 992299
@@ -58,7 +61,7 @@ public class RichieRich {
 		// 12321
 		// -> 12921
 
-		// 8 4 
+		// 8 4
 		// 11119111
 		// -> 91199119
 		
@@ -66,7 +69,6 @@ public class RichieRich {
 		// 128392759430124
 		// -> 929394959493929
 		char[] num = s.toCharArray();
-		int oneSideChangeCount = 0;
 		for (int l = 0; l < n / 2; l++) {
 			int left = num[l] - 48;
 			int right = num[n - l - 1] - 48;
@@ -74,15 +76,13 @@ public class RichieRich {
 			if (left > right) {
 				num[n - l - 1] = (char) (left + 48);
 				k--;
-				if (left != 9) {
-					oneSideChangeCount++;
-				}
+                change[l] = 1;
+                change[n - l - 1] = 1;
 			} else if (right > left) {
 				num[l] = (char) (right + 48);
 				k--;
-				if (right != 9) {
-					oneSideChangeCount++;
-				}
+                change[l] = 1;
+                change[n - l - 1] = 1;
 			}
 
 			if (k == 0) {
@@ -90,21 +90,41 @@ public class RichieRich {
 			}
 		}
 
-		k += oneSideChangeCount;
 		for (int l = 0; l < n / 2; l++) {
 			int left = num[l] - 48;
 			int right = num[n - l - 1] - 48;
 
-			if (left != 9 && right != 9 && left == right && k >= 2) {
+            if (left != 9 &&  k >= 2 && change[l] == 0) {
+                num[l] = (char) (9 + 48);
+                num[n - l - 1] = (char) (9 + 48);
+                k -= 2;
+            } else if (left != 9 &&  k >= 1 && change[l] == 1) {
 				num[l] = (char) (9 + 48);
 				num[n - l - 1] = (char) (9 + 48);
 				k -= 2;
+                k += 1;
 			}
 
 			if (k == 0) {
 				break;
 			}
 		}
+
+
+        for (int l = 0; l < n / 2; l++) {
+            int left = num[l] - 48;
+            int right = num[n - l - 1] - 48;
+
+            if (left != 9 &&  k >= 2) {
+                num[l] = (char) (9 + 48);
+                num[n - l - 1] = (char) (9 + 48);
+                k -= 2;
+            }
+
+            if (k == 0) {
+                break;
+            }
+        }
 
 		if (k > 0 && n % 2 == 1) {
 			num[n / 2] = '9';
@@ -119,17 +139,7 @@ public class RichieRich {
 			}
 		}
 
-		//		Scanner outputScanner = new Scanner(new FileInputStream(System.getProperty("user.home") + "/" + "out.txt"));
-		//		char[] expected = outputScanner.next().toCharArray();
-		//
-		//		for (int i=0; i<n; i++) {
-		//			if (num[i] != expected[i]) {
-		//				System.out.println(num[i]+" vs "+expected[i]+" at index "+i);
-		//			}
-		//		}
-		//		
-
-		System.out.println(new String(num));
+        System.out.println(new String(num));
 
 	}
 }

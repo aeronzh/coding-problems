@@ -32,9 +32,7 @@ import java.util.Scanner;
  *
  */
 public class PermutationGame {
-	private static enum Player {
-		Alice, Bob
-	}
+	private static final int MAX_N = 15;
 
 	private static void print(int[] a) {
 		for (int i = 0; i < a.length; i++) {
@@ -130,7 +128,7 @@ public class PermutationGame {
 		} else {
 			
 			for (int child : next[current]) {
-				generateWinningArray(isIncreasing, next, max, child, winning);
+                generateWinningArray(isIncreasing, next, max, child, winning);
 			}
 			
 			boolean allChildsLose = true;
@@ -152,34 +150,30 @@ public class PermutationGame {
 		}
 	}
 
-	private static void solve(int[] a) {
+	private static String solve(int[] a, List<Integer>[] next) {
 		int n = a.length;
 
 		// isIncreasing[i] = true if seq with mask i is an increasing seq, thus player given that mask looses. False otherwise.
 		int max = (1 << n);
 		boolean[] isIncreasing = new boolean[max];
-		List<Integer>[] next = new ArrayList[max];
-
 		for (int i = 1; i <= max - 1; i++) {
 			isIncreasing[i] = isIncreasing(a, i);
-			next[i] = nextMask(i);
 		}
 		
 		boolean[] winning = new boolean[max];
 		generateWinningArray(isIncreasing, next, max, (max-1), winning);
 		
-		for (int i = 1; i <= max - 1; i++) {
-			System.out.println(Integer.toBinaryString(i) + (winning[i] ? " --> winning" : ""));
-		}
+//		for (int i = 1; i <= max - 1; i++) {
+//			System.out.println(Integer.toBinaryString(i) + (winning[i] ? " --> winning" : ""));
+//		}
 		
 		for (int child:next[max-1]) {
 			if (!winning[child]) {
-				System.out.println("Alice");
-				return;
+				return "Alice";
 			}
 		}
 		
-		System.out.println("Bob");
+		return "Bob";
 	}
 
 	public static void main(String[] args) throws FileNotFoundException {
@@ -188,6 +182,13 @@ public class PermutationGame {
 		Scanner output = new Scanner(new FileInputStream(System.getProperty("user.home") + "/" + "out.txt"));
 
 		int tests = scanner.nextInt();
+
+        int max = (1 << MAX_N);
+        List<Integer>[] next = new ArrayList[max];
+        for (int i = 1; i <= max - 1; i++) {
+            next[i] = nextMask(i);
+        }
+
 		for (int t = 0; t < tests; t++) {
 
 			int n = scanner.nextInt();
@@ -196,7 +197,14 @@ public class PermutationGame {
 				a[i] = scanner.nextInt();
 			}
 
-			solve(a);
+			String result = solve(a, next);
+            String expectedResult = output.next();
+
+            if (result.equals(expectedResult)) {
+                System.out.println(result);
+            } else {
+                System.out.println("Received '"+result+"' expected '"+expectedResult+"'");
+            }
 		}
 
 	}
