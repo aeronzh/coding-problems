@@ -61,6 +61,10 @@ public class RichieRich {
 		// 8 4 
 		// 11119111
 		// -> 91199119
+		
+		// 15 8 
+		// 128392759430124
+		// -> 929394959493929
 		char[] num = s.toCharArray();
 		int oneSideChangeCount = 0;
 		for (int l = 0; l < n / 2; l++) {
