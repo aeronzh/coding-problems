@@ -53,10 +53,14 @@ public class RichieRich {
 		// 6 2
 		// 932239
 		// -> 992299
-		
+
 		// 5 1
 		// 12321
 		// -> 12921
+
+		// 8 4 
+		// 11119111
+		// -> 91199119
 		char[] num = s.toCharArray();
 		int oneSideChangeCount = 0;
 		for (int l = 0; l < n / 2; l++) {
@@ -66,11 +70,15 @@ public class RichieRich {
 			if (left > right) {
 				num[n - l - 1] = (char) (left + 48);
 				k--;
-				oneSideChangeCount++;
+				if (left != 9) {
+					oneSideChangeCount++;
+				}
 			} else if (right > left) {
 				num[l] = (char) (right + 48);
 				k--;
-				oneSideChangeCount++;
+				if (right != 9) {
+					oneSideChangeCount++;
+				}
 			}
 
 			if (k == 0) {
@@ -94,11 +102,11 @@ public class RichieRich {
 			}
 		}
 
-		if (k>0 && n % 2 == 1) {
-			num[n/2] = '9';
+		if (k > 0 && n % 2 == 1) {
+			num[n / 2] = '9';
 			k--;
 		}
-		
+
 		// check if palidrome
 		for (int i = 0; i < n / 2; i++) {
 			if (num[i] != num[n - i - 1]) {
@@ -106,16 +114,17 @@ public class RichieRich {
 				return;
 			}
 		}
-		
-		Scanner outputScanner = new Scanner(new FileInputStream(System.getProperty("user.home") + "/" + "out.txt"));
-		char[] expected = outputScanner.next().toCharArray();
 
-		for (int i=0; i<n; i++) {
-			if (num[i] != expected[i]) {
-				System.out.println(num[i]+" vs "+expected[i]+" at index "+i);
-			}
-		}
-		
+		//		Scanner outputScanner = new Scanner(new FileInputStream(System.getProperty("user.home") + "/" + "out.txt"));
+		//		char[] expected = outputScanner.next().toCharArray();
+		//
+		//		for (int i=0; i<n; i++) {
+		//			if (num[i] != expected[i]) {
+		//				System.out.println(num[i]+" vs "+expected[i]+" at index "+i);
+		//			}
+		//		}
+		//		
+
 		System.out.println(new String(num));
 
 	}
