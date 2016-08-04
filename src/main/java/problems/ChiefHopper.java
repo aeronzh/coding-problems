@@ -21,7 +21,7 @@ public class ChiefHopper {
 					energy = energy.add(diff);
 				}
 
-				if (energy.compareTo(BigInteger.ZERO) <= 0) {
+				if (energy.compareTo(BigInteger.ZERO) < 0) {
 					break TEST;
 				}
 			}
@@ -32,11 +32,6 @@ public class ChiefHopper {
 		}
 
 		return max;
-	}
-
-	private static void solve(int[] h) {
-		// 3 4 3 2 4
-		// 3 
 	}
 
 	public static void main(String[] args) throws FileNotFoundException {
