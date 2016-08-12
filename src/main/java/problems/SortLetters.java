@@ -12,20 +12,29 @@ import java.util.Map;
  */
 public class SortLetters {
 
-	private static String sort(String a, String b) {
-		char[] charsA = a.toCharArray();
-		Map<String, Integer> char2Pos = new HashMap<String, Integer>();
-		for (int i=0; i<charsA.length; i++) {
-			char2Pos.put(""+charsA[i], i);
+	private static String sort(String toSort, String order) {
+		int[] char2count = new int[26];
+		for (char c : toSort.toCharArray()) {
+			char2count[c-'a'] = char2count[c-'a'] + 1;
 		}
-		
-		char[] newStr = new char[b.length()];
-		
-		return null;
-	}
-	
-	public static void main(String[] args) {
 
+		StringBuilder sb = new StringBuilder();
+		for (char c : order.toCharArray()) {
+			while (char2count[c-'a'] > 0) {
+				sb.append(c);
+				char2count[c-'a'] = char2count[c-'a'] - 1;
+			}
+		}
+
+		return sb.toString();
+	}
+
+	public static void main(String[] args) {
+		String toSort = "xyacbda";
+		String order = "abc";
+		
+		System.out.println(sort(toSort, order));
+		
 	}
 	
 }
