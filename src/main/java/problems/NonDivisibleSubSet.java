@@ -32,74 +32,50 @@ import java.util.Set;
  *
  */
 public class NonDivisibleSubSet {
-
-	private static void print(int[] a) {
-		for (int i = 0; i < a.length; i++) {
-			System.out.print(a[i] + " ");
-		}
-		System.out.println();
-	}
-
-	private static void solve(int[] a, int n, int k) {
+private static void solve(int[] a, int n, int k) {
 		int[] mod = new int[k];
 
 		for (int i = 0; i < n; i++) {
 			mod[a[i] % k] = mod[a[i] % k] + 1;
 		}
-
-		// 0 1 2
-		Set<Integer> set = new HashSet<Integer>();
-		int mid = k / 2;
+		
+		int mid = k/2;
 		if (k % 2 == 0) {
 			mid = mid - 1;
 		}
 
-		int count = 0;
-		for (int l = 1; l <= mid; l++) {
+		// k = 6 --> 0 1 2 3 4 5
+		// mid = 2
+		// non allowed pairs: 1&5, 2&4, 3&3
+		
+		int size = 0;
+		for (int l=1; l<=mid; l++) {
 			int r = k - l;
-			System.out.print(l + " vs " + r);
-			if (mod[l] > mod[r]) {
-				for (int i = 0; i < n; i++) {
-					if (a[i] % k == l) {
-						count++;
-					}
-				}
-				System.out.println(" --> " + l);
-			} else {
-				for (int i = 0; i < n; i++) {
-					if (a[i] % k == r) {
-						count++;
-					}
-				}
-				System.out.println(" --> " + r);
-			}
-
+			
+			size += Math.max(mod[l], mod[r]);
 		}
-
+		
 		if (mod[0] > 0) {
-			count++;
+			size++;
 		}
-
+		
 		if (k % 2 == 0 && mod[k / 2] > 0) {
-			count++;
+			size++;
 		}
-
-		System.out.println(count);
-
+		
+		System.out.println(size);
 	}
 
 	public static void main(String[] args) throws FileNotFoundException {
 		System.setIn(new FileInputStream(System.getProperty("user.home") + "/" + "in.txt"));
+		Scanner in = new Scanner(System.in);
 
-		Scanner scanner = new Scanner(System.in);
-
-		int n = scanner.nextInt();
-		int k = scanner.nextInt();
+		int n = in.nextInt();
+		int k = in.nextInt();
 		int[] a = new int[n];
-		int[] c = new int[n];
 
 		for (int i = 0; i < n; i++) {
-			a[i] = scanner.nextInt();
+			a[i] = in.nextInt();
 		}
 
 		solve(a, n, k);
