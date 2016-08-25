@@ -5,29 +5,21 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
- * Created by lucas on 13/05/16.
+ * Best way to find the number of pairs in an array whose difference is k
  */
 public class Pairs {
 
     private static int solve(int[] a, int n, int k) {
-        Map<Integer, List<Integer>> map = new HashMap<Integer, List<Integer>>();
+       Set<Integer> set = new HashSet<Integer>()
 
         for (int num:a) {
-            if (!map.containsKey(num)) {
-                map.put(num, new ArrayList<Integer>());
-            }
-        }
-
-        for (int num:a) {
-            if (map.containsKey(num+k)) {
-                map.get(num+k).add(num);
-            }
+            set.add(num);
         }
 
         int count = 0;
         for (int num:a) {
-            if (map.containsKey(num)) {
-                count += map.get(num).size();
+            if (set.contains(num+k)) {
+                count++;
             }
         }
         return count;
