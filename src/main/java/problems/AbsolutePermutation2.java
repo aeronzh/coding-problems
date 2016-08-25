@@ -28,27 +28,39 @@ public class AbsolutePermutation {
 	}
 
 	private static void solve(int n, int k) {
+		
 		// 1 2 3 4 5 6 7 8 9
 		// k = 2
 		// 3 4 1 2 7 8 5 6
 
 		int[] p = new int[n];
+		if (k==0) {
+			for (int i=0; i<n; i++) {
+				p[i] = i+1;
+			}
+			print(p);
+			return;
+		}
+		
+		if (k>0 && n % (2*k) != 0) {
+            System.out.println("-1");
+            return;
+        }
+		
 		int num = 1;
 		int i = 0;
-		while (num <= n - k) {
+		while (i < n - k) {
+			// swap num with (num+k)
 			for (int j = 0; j < k; j++) {
-				p[i] = num + k + j;
-				i++;
+				p[i+j] = num + k + j;
+				p[i + k + j] = num + j;
 			}
 
-			for (int j = 0; j < k; j++) {
-				p[i] = num + j;
-				i++;
-			}
-			
-			num = num + 2*k -1;
-			
+			num += (2*k);
+			i += (2*k);
 		}
+
+		print(p);
 
 	}
 
