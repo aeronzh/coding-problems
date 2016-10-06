@@ -36,6 +36,12 @@ public class RotateArray {
 		System.out.println();
 	}
 
+    /**
+     * Reverse first k element of the array and then reverse last n-k elements of the array and then reverse complete array.
+     *
+     * @param array
+     * @param k
+     */
 	private static void rotateInPlace(int[] array, int k) {
 		int size = array.length;
 		reverse(array, 0, size - 1);
@@ -45,6 +51,7 @@ public class RotateArray {
 
 	/**
 	 * Reverse string in the given interval
+     *
 	 * 
 	 * @param array
 	 * @param start

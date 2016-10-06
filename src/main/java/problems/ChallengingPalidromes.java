@@ -93,6 +93,9 @@ public class ChallengingPalidromes {
 		String subStr = longestCommonSubstr(a, reverseB);
 		String revSubStr = reverse(subStr);
 
+        System.out.println("subStr = " + subStr);
+        System.out.println("revSubStr = " + revSubStr);
+
 		if (subStr.isEmpty()) {
 			return "-1";
 		}

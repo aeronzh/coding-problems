@@ -10,7 +10,7 @@ import java.util.*;
 public class Pairs {
 
     private static int solve(int[] a, int n, int k) {
-       Set<Integer> set = new HashSet<Integer>()
+       Set<Integer> set = new HashSet<Integer>();
 
         for (int num:a) {
             set.add(num);

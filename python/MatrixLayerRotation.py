@@ -35,6 +35,7 @@ def getLayer(matrix, rows, columns, l):
 	return layer
 	
 
+
 def rotateLayer(layer, positions):	
 	n = len(layer)
 	rotations = positions%n
@@ -69,7 +70,7 @@ def addLayer(matrix, rows, columns, layer, l):
 		i+=1		
 		
 		
-f = open("C:/Users/ex45141/in.txt")
+f = open("/Users/lucas/in.txt")
 					
 rows, columns, rotations = (int(i) for i in f.readline().split()) # rows, columns, rotations = (int(i) for i in raw_input().split())
 
@@ -82,8 +83,9 @@ for r in range(0, rows):
 
 
 newMatrix = []
-layers = rows/2
-for l in (0,layers-1):	
+layers = min(rows,columns)/2
+
+for l in range(0,layers):
 	layer = getLayer(matrix, rows, columns, l)
 	rotateLayer(layer, rotations)
 	addLayer(matrix, rows, columns, layer, l)
@@ -93,3 +95,5 @@ for r in range(0, rows):
 	for c in range(0, columns):
 		print matrix[r][c],
 	print
+
+

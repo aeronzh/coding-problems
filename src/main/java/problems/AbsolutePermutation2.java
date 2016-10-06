@@ -18,7 +18,7 @@ import java.util.Scanner;
  * @author lucas
  *
  */
-public class AbsolutePermutation {
+public class AbsolutePermutation2 {
 
 	private static void print(int[] a) {
 		for (int i : a) {
