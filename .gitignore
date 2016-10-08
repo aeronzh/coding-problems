@@ -30,4 +30,4 @@ hs_err_pid*
 *.iws
 
 #Python & Jupyter
-python/.ipynb_checkpoints/*
+.ipynb_checkpoints
