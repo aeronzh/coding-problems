@@ -22,6 +22,9 @@ For example "ggi":
 3rd
 """
 def signature(str):
+	if (str in signatures):
+		return signatures[str]
+	
 	length = len(str)
 	sig = [[False]*(length) for i in range(length)]
 	for i in range(0, length):
@@ -31,7 +34,8 @@ def signature(str):
 		for j in range(i+1, length):
 			sig[i][j] = (str[i] == str[j])
 			sig[j][i] = sig[i][j]
-			
+	
+	signatures[str]	= sig
 	return sig
 
 """
@@ -70,6 +74,8 @@ def main():
 		print(solve(l,r,s,subStrings))
 
 
+		
+signatures = {}
 main()	
 				
 				
