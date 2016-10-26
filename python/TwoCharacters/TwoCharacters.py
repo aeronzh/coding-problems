@@ -1,4 +1,5 @@
 """
+### Two Characters
 String $t$ always consists of two distinct alternating characters. For example, if string $t$'s two distinct characters are `x` and `y`, 
 then $t$ could be `xyxyx` or `yxyxy` but not `xxyy` or `xyyx`.
 
