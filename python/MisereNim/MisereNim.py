@@ -54,14 +54,14 @@ def main():
 		n = int(f.readline())
 		piles = [int(i) for i in f.readline().split()]
 
-		numSum = 0
+		nimSum = 0
 		outcome = 1
 		for n in piles:
 			if n > 1:
 				outcome = 0
-			numSum ^= n
+			nimSum ^= n
 			
-		if numSum == outcome:
+		if nimSum == outcome:
 			print("Second")
 		else:
 			print("First")
