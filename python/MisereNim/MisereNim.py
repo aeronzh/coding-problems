@@ -40,6 +40,8 @@ For each test case, print the name of the winner on a new line (i.e., either `Fi
 First
 Second
 ```
+
+http://mathoverflow.net/questions/71802/analysis-of-misere-nim
 """
 import sys
 from collections import defaultdict
