@@ -42,6 +42,9 @@ Second
 ```
 
 http://mathoverflow.net/questions/71802/analysis-of-misere-nim
+
+https://brilliant.org/wiki/nim/
+
 """
 import sys
 from collections import defaultdict
