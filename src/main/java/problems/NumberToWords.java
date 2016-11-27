@@ -4,7 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class NumberToWords {
+public class Solution {
 	private static String[] num = { "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen",
 			"Sixteen", "Seventeen", "Eighteen", "Nineteen" };
 
@@ -29,21 +29,26 @@ public class NumberToWords {
 		}
 
 		if (n >= 100) {
-			return num[(int)(n/100)] + SPACE +  "Hundred" + SPACE +  ans;
+			return num[(int)(n/100)] + SPACE +  "Hundred" + SPACE + ans;
 		} else {
 			return ans;
 		}
 	}
 
+    
 	private static String solve(long n) {
+        if (n == 0) {
+            return "Zero";
+        }
+        
+        
 		String ans = "";
-
 		int specialIndex = 0;
 		while (n > 0) {
 			long tmp = n % 1000;
 			String hundred = lessThanThousand(tmp);
 			n = n / 1000;
-			ans =  hundred + SPACE +  special[specialIndex++] + SPACE +  ans;
+			ans =  hundred.trim() + SPACE +  special[specialIndex++] + SPACE +  ans.trim();
 		}
 
 		return ans.trim();
