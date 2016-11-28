@@ -112,9 +112,7 @@ public class DortmundDilemma {
         long[][] p = new long[maxN + 1][maxK + 1];
 
         for (int k = 1; k <= maxK; k++) {
-            for (int n = 1; n <= maxN; n++) {
-                f[n][k] = k;
-            }
+            f[1][k] = k;
 
             long kn = k;
             for (int n = 2; n <= maxN; n++) {
