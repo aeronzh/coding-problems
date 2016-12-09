@@ -2,6 +2,8 @@ package problems;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Scanner;
 
 /**
@@ -14,72 +16,31 @@ import java.util.Scanner;
  *
  */
 public class NextGreaterElement {
-	private static class BinaryTreeNode {
-		private BinaryTreeNode parent;
-		private Integer data;
-
-		private BinaryTreeNode left;
-		private BinaryTreeNode right;
-
-		public BinaryTreeNode(Integer data) {
-			this.data = data;
-		}
-
-		public void addNode(BinaryTreeNode node) {
-			node.parent = this;
-			if (node.data <= this.data) {
-				// go left
-				if (this.left == null) {
-					this.left = node;
-				} else {
-					this.left.addNode(node);
-				}
-			} else {
-				if (this.right == null) {
-					this.right = node;
-				} else {
-					this.right.addNode(node);
-				}
-			}
-		}
-	}
-
 	// 4, 5, 2, 25
 	private static void solve(int[] a) {
 		int n = a.length;
+		Deque<Integer> stack = new ArrayDeque<Integer>();
 
-		BinaryTreeNode[] node = new BinaryTreeNode[n];
-		node[0] = new BinaryTreeNode(a[0]);
-
-		BinaryTreeNode tree = node[0];
+		stack.push(a[0]);
 		for (int i = 1; i < n; i++) {
-			node[i] = new BinaryTreeNode(a[i]);
-			tree.addNode(node[i]);
-		}
 
-		for (int i = 0; i < n; i++) {
-			if (node[i].right != null) {
-				System.out.println(a[i] + " " + node[i].right.data);
-			} else {
-				BinaryTreeNode parent = node[i].parent;
+			int next = a[i];
 
-				if (parent != null && parent.right == node[i]) {
-					// node[i] is a right node and has no right child
-					System.out.println(a[i] + " -1");
+			while (!stack.isEmpty()) {
+				int elem = stack.pop();
+				if (next > elem) {
+					System.out.println(elem + " " + next);
 				} else {
-					// Go to parent and then as down right as you can
-					if (parent != null && parent.right != null) {
-						BinaryTreeNode next = parent.right;
-						while (next.right != null) {
-							next = next.right;
-						}
-						System.out.println(a[i] + " " + next.data);
-
-					} else {
-						System.out.println(a[i] + " -1");
-					}
+					stack.push(elem);
+					break;
 				}
 			}
+
+			stack.push(next);
+		}
+
+		while (!stack.isEmpty()) {
+			System.out.println(stack.pop() + " -1");
 		}
 	}
 
