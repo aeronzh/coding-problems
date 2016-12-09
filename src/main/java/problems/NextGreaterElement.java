@@ -63,7 +63,7 @@ public class NextGreaterElement {
 			} else {
 				BinaryTreeNode parent = node[i].parent;
 
-				if (parent != null && parent.right == node[i] && node[i].right == null) {
+				if (parent != null && parent.right == node[i]) {
 					// node[i] is a right node and has no right child
 					System.out.println(a[i] + " -1");
 				} else {
