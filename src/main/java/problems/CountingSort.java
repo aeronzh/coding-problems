@@ -179,7 +179,7 @@ public class CountingSort {
 			countLessEq[i] = countLessEq[i] + countLessEq[i - 1];
 		}
 
-		int[] position = new int[n];
+		int[] position = new int[100];
 		Arrays.fill(position, -1);
 		for (int i = 0; i < n; i++) {
 			if (position[number[i]] == -1) {
