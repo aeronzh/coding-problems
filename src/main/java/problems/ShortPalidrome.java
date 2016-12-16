@@ -43,20 +43,28 @@ public class ShortPalidrome {
 			pre[c - 'a'][i] = pre[c - 'a'][i] + 1;
 		}
 
-		long[][][] post = new long[26][26][s.length()]; // post['a']['b'][i] holds the number of 'ab' (no necessary consecutive) from and after index i
-		post[s.charAt(s.length() - 2) - 'a'][s.charAt(s.length() - 1) - 'a'][s.length() - 2] = 1;
-		for (int i = s.length() - 3; i >= 0; i--) {
+		long ans = 0;
+		long[][] post = new long[26][26]; // post['a']['b'][i] holds the number of 'ab' (no necessary consecutive) from and after index i
+		//post[s.charAt(s.length() - 2) - 'a'][s.charAt(s.length() - 1) - 'a'] = 1;
+		for (int i = s.length() - 2; i >= 0; i--) {
 
 			char c = s.charAt(i);
+			
 			for (char x = 'a'; x <= 'z'; x++) {
-
-				// For all chars j in [a..z] transfer the post[][][] value for jx for index i. Because if jx exists from index i+1
-				// it will also exist starting from index i.
-				for (char j = 'a'; j <= 'z'; j++) {
-					post[j - 'a'][x - 'a'][i] = post[j - 'a'][x - 'a'][i + 1];
+				long preCount = 0;
+				if (i > 0) {
+					preCount = pre[x - 'a'][i - 1];
 				}
 
-				// Since we have a new character c, we need to increase the entries of cx in post[][][] for c starting from the current index i+1 
+				long postCount = post[c - 'a'][x - 'a'];
+				long product = preCount * postCount;
+				ans = (ans + product) % MOD;
+			}
+			
+			
+			for (char x = 'a'; x <= 'z'; x++) {
+
+				// Since we have a new character c, we need to increase the entries of cx in post[][] for c starting from the current index i+1 
 				// (exclude i because we have c at index i).
 				// Number of x till end
 				long end = pre[x - 'a'][s.length() - 1];
@@ -67,24 +75,10 @@ public class ShortPalidrome {
 				long diff = end - start;
 
 				// Number of cx from i till end
-				post[c - 'a'][x - 'a'][i] = post[c - 'a'][x - 'a'][i] + diff;
+				post[c - 'a'][x - 'a'] = post[c - 'a'][x - 'a'] + diff;
 			}
-		}
 
-		long ans = 0;
-		for (int i = 1; i < s.length() - 1; i++) {
-			char c = s.charAt(i);
 
-			for (char x = 'a'; x <= 'z'; x++) {
-				//System.out.print(i + " " + x + "" + c + " and " + c + "" + x);
-				long preCount = pre[x - 'a'][i - 1];
-				long postCount = post[c - 'a'][x - 'a'][i + 1];
-
-				//System.out.println("-> " + preCount + " and " + postCount);
-
-				long product = preCount * postCount;
-				ans = (ans + product) % MOD;
-			}
 		}
 
 		return ans;
