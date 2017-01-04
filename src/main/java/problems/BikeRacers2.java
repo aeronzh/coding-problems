@@ -117,7 +117,7 @@ public class BikeRacers2 {
 	// Check if there is a maxFlow >= k in a bipartite graph created 
 	// by connecting bikers with bikes iff the bike is reachable by 
 	// the biker in <= sqrt(t) time
-	private static boolean check(int n, int m, int k, int[][] bikers, int[][] bikes, Long t, BigInteger[][] dist) {
+	private static boolean check(int n, int m, int k, int[][] bikers, int[][] bikes, BigInteger t, BigInteger[][] dist) {
 		// Build a bipartite graph by connecting bikers with bikes iff the bike is reachable by the biker in <= t time.
 
 		// Choose some unique integer for source and target
@@ -128,7 +128,7 @@ public class BikeRacers2 {
 		for (int biker = 0; biker < n; biker++) {
 			for (int bike = n; bike < n + m; bike++) {
 				// Only connect bikers with bikes iff the bike is reachable by the biker in <= t time
-				if (dist[biker][bike].compareTo(new BigInteger("" + t)) <= 0) {
+				if (dist[biker][bike].compareTo(t) <= 0) {
 					// Add an edge with capacity 1
 					graph[biker][bike] = 1;
 
@@ -179,7 +179,7 @@ public class BikeRacers2 {
 		Long sqrHigh = Long.parseUnsignedLong("10000000000000000");
 		while (sqrLow < sqrHigh) {
 			long mid = (sqrLow + sqrHigh) / 2;
-			if (check(n, m, k, bikers, bikes, mid, dist)) {
+			if (check(n, m, k, bikers, bikes, new BigInteger("" + mid), dist)) {
 				sqrHigh = mid;
 			} else {
 				sqrLow = mid + 1;
