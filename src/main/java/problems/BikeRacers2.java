@@ -176,7 +176,7 @@ public class BikeRacers2 {
 		
 		// Standard binary search loop
 		Long sqrLow = Long.parseUnsignedLong("0");
-		Long sqrHigh = Long.parseUnsignedLong("10000000000000000");
+		Long sqrHigh = Long.parseUnsignedLong("100000000000000");
 		while (sqrLow < sqrHigh) {
 			long mid = (sqrLow + sqrHigh) / 2;
 			if (check(n, m, k, bikers, bikes, new BigInteger("" + mid), dist)) {
