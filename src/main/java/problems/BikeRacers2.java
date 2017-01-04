@@ -41,6 +41,25 @@ public class BikeRacers2 {
 		return (visited[target] == true);
 	}
 
+	private static boolean dfs(int residualCapacity[][], int source, int target, int parent[], boolean[] visited) {
+		int n = residualCapacity.length;
+		visited[source] = true;
+
+		if (visited[target]) {
+			return true;
+		} else {
+			for (int v = 0; v < n; v++) {
+				if (!visited[v] && residualCapacity[source][v] > 0) {
+					visited[v] = true;
+					parent[v] = source;
+					dfs(residualCapacity, v, target, parent, visited);
+				}
+			}
+
+		}
+		return (visited[target] == true);
+	}
+
 	private static int maxFlow(int graph[][], int source, int target) {
 		int n = graph.length;
 		int[][] residualCapacity = new int[n][n];
@@ -57,7 +76,12 @@ public class BikeRacers2 {
 		// Initially flow is 0
 		int flow = 0;
 
-		while (bfs(residualCapacity, source, target, parent)) {
+		boolean[] visited = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			visited[i] = false;
+		}
+		
+		while (dfs(residualCapacity, source, target, parent, new boolean[n])) {
 			// Find the bottleneck (minimum residual capacity) of path
 			int bottleneck = Integer.MAX_VALUE;
 			for (int v = target; v != source; v = parent[v]) {
@@ -93,7 +117,7 @@ public class BikeRacers2 {
 	// Check if there is a maxFlow >= k in a bipartite graph created 
 	// by connecting bikers with bikes iff the bike is reachable by 
 	// the biker in <= sqrt(t) time
-	private static boolean check(int n, int m, int k, int[][] bikers, int[][] bikes, Long t) {
+	private static boolean check(int n, int m, int k, int[][] bikers, int[][] bikes, Long t, BigInteger[][] dist) {
 		// Build a bipartite graph by connecting bikers with bikes iff the bike is reachable by the biker in <= t time.
 
 		// Choose some unique integer for source and target
@@ -104,8 +128,7 @@ public class BikeRacers2 {
 		for (int biker = 0; biker < n; biker++) {
 			for (int bike = n; bike < n + m; bike++) {
 				// Only connect bikers with bikes iff the bike is reachable by the biker in <= t time
-				BigInteger distance = distance(bikers[biker][0], bikers[biker][1], bikes[bike - n][0], bikes[bike - n][1]);
-				if (distance.compareTo(new BigInteger("" + t)) <= 0) {
+				if (dist[biker][bike].compareTo(new BigInteger("" + t)) <= 0) {
 					// Add an edge with capacity 1
 					graph[biker][bike] = 1;
 
@@ -142,12 +165,21 @@ public class BikeRacers2 {
 			bikes[i][1] = in.nextInt();
 		}
 
+		BigInteger[][] dist = new BigInteger[n+m+2][n+m+2];
+		for (int biker = 0; biker < n; biker++) {
+			for (int bike = n; bike < n + m; bike++) {
+				// Only connect bikers with bikes iff the bike is reachable by the biker in <= t time
+				BigInteger distance = distance(bikers[biker][0], bikers[biker][1], bikes[bike - n][0], bikes[bike - n][1]);
+				dist[biker][bike] = distance;
+			}
+		}
+		
 		// Standard binary search loop
 		Long sqrLow = Long.parseUnsignedLong("0");
 		Long sqrHigh = Long.parseUnsignedLong("10000000000000000");
 		while (sqrLow < sqrHigh) {
 			long mid = (sqrLow + sqrHigh) / 2;
-			if (check(n, m, k, bikers, bikes, mid)) {
+			if (check(n, m, k, bikers, bikes, mid, dist)) {
 				sqrHigh = mid;
 			} else {
 				sqrLow = mid + 1;
