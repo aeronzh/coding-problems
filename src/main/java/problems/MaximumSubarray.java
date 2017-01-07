@@ -10,8 +10,6 @@ import java.util.regex.*;
  * Created by lucas on 05/03/16.
  */
 public class MaximumSubarray {
-
-
     private static int solveContinuous(int[] a) {
         int sum = a[0];
         int max = a[0];

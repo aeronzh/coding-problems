@@ -22,11 +22,11 @@ public class BookingCom {
         // Read review
         Map<Integer, Integer> hotel2count = new HashMap<Integer, Integer>(); // hotel ID -> Word Count
         for (int i = 0; i < m; i++) {
-            // Read hotel id
+            // Read hotel bikeNo
             int id = Integer.parseInt(in.next());
             in.nextLine();
 
-            // Put id in map in case of new
+            // Put bikeNo in map in case of new
             if (!hotel2count.containsKey(id)) {
                 hotel2count.put(id, 0);
             }

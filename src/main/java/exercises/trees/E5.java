@@ -31,7 +31,7 @@ public class E5 {
 	 * 
 	 * @param node
 	 *            the node we of which we want the inorder successor.
-	 * @return MyBinarySearchTree in order successor of node.
+	 * @return BST in order successor of node.
 	 */
 	public static <T extends Comparable<T>> MyBinarySearchTree<T> getInOrderSuccessor(MyBinarySearchTree<T> node) {
 		MyBinarySearchTree<T> result = null;

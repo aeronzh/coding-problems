@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
- * A jail has prisoners, and each prisoner has a unique id number, S , ranging
+ * A jail has prisoners, and each prisoner has a unique bikeNo number, S , ranging
  * from 1 to N. There are M sweets that must be distributed to the prisoners.
  * 
  * The jailer decides the fairest way to do this is by sitting the prisoners
