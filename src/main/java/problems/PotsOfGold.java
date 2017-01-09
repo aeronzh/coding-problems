@@ -1,5 +1,9 @@
 package problems;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 /**
  * Created by lucas on 25/12/2016.
  */
@@ -17,8 +21,15 @@ public class PotsOfGold {
         return Math.max(chooseFromStart, chooseFromEnd);
     }
 
-    public static void main(String[] args) {
-        int[] pots = new int[] {100,1,20,30,40,10,20,30,90};
+    public static void main(String[] args) throws FileNotFoundException {
+        System.setIn(new FileInputStream(System.getProperty("user.home") + "/" + "in.txt"));
+
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        int[] pots = new int[n];
+        for (int i=0; i<n; i++) {
+            pots[i] = scanner.nextInt();
+        }
 
         int result = choose(pots, 0, pots.length - 1);
         System.out.println(result);

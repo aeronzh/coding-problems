@@ -20,7 +20,7 @@ public class GenerateTestsForCelebrityProblem {
     }
 
     public static void main(String[] args) {
-        int n = 19999;
+        int n = 9999;
         int celebrity = randInt(1, n);
 
         Set<String> ans = new HashSet<String>();
