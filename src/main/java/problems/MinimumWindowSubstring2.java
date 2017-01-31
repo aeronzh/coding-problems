@@ -11,7 +11,7 @@ public class MinimumWindowSubstring2 {
     public static String minWin(String s, String t) {
         String ans = "";
 
-        // Build a count map that holdshow often each character in t appears
+// Build a count map that holds how often each character in t appears
         Map<Character, Integer> dict = new HashMap<>();
         for (char c : t.toCharArray()) {
             if (dict.containsKey(c)) {
@@ -26,6 +26,7 @@ public class MinimumWindowSubstring2 {
         int n = s.length();
         int start = -1;
         int end = -1;
+        boolean complete = false;
         for (int i = 0; i < n; i++) {
             char c = s.charAt(i);
 
@@ -42,16 +43,18 @@ public class MinimumWindowSubstring2 {
             }
 
             // Check if we have all required characters
-            boolean complete = true;
-            for (Character key : dict.keySet()) {
-                if (count.containsKey(key)) {
-                    if (count.get(key) < dict.get(key)) {
+            if (!complete) {
+                complete = true;
+                for (Character key : dict.keySet()) {
+                    if (count.containsKey(key)) {
+                        if (count.get(key) < dict.get(key)) {
+                            complete = false;
+                            break;
+                        }
+                    } else {
                         complete = false;
                         break;
                     }
-                } else {
-                    complete = false;
-                    break;
                 }
             }
 
