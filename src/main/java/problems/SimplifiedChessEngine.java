@@ -330,7 +330,7 @@ public class SimplifiedChessEngine {
                                         //System.out.println("Moving Queen-" + (turn == WHITE ? "W" : "B")+" tr="+tr+" tc="+tc);
 
                                         // Recursive call
-                                        if (solve(board, m - 1, visited, turn == WHITE ? BLACK : WHITE)) {
+                                        if (solve(board, m - 1, visited, turn == WHITE ? BLACK : WHITE) && turn==WHITE) {
                                             return true;
                                             //whiteWins = true;
                                         }
@@ -369,7 +369,7 @@ public class SimplifiedChessEngine {
                                     //System.out.println("Moving Knight-" + (turn == WHITE ? "W" : "B")+" tr="+tr+" tc="+tc);
 
                                     // Recursive call
-                                    if (solve(board, m - 1, visited, turn == WHITE ? BLACK : WHITE)) {
+                                    if (solve(board, m - 1, visited, turn == WHITE ? BLACK : WHITE) && turn==WHITE) {
                                         return true;
                                         //whiteWins = true;
                                     }
@@ -404,7 +404,7 @@ public class SimplifiedChessEngine {
                                         //System.out.println("Moving Bishop-" + (turn == WHITE ? "W" : "B")+" tr="+tr+" tc="+tc);
 
                                         // Recursive call
-                                        if (solve(board, m - 1, visited, turn == WHITE ? BLACK : WHITE)) {
+                                        if (solve(board, m - 1, visited, turn == WHITE ? BLACK : WHITE) && turn==WHITE) {
                                             return true;
                                             //whiteWins = true;
                                         }
@@ -443,7 +443,7 @@ public class SimplifiedChessEngine {
                                         //System.out.println("Moving Rook-" + (turn == WHITE ? "W" : "B")+" tr="+tr+" tc="+tc);
 
                                         // Recursive call
-                                        if (solve(board, m - 1, visited, turn == WHITE ? BLACK : WHITE)) {
+                                        if (solve(board, m - 1, visited, turn == WHITE ? BLACK : WHITE) && turn==WHITE) {
                                             return true;
                                             //whiteWins = true;
                                         }
@@ -473,15 +473,6 @@ public class SimplifiedChessEngine {
             }
             return false;
         } else {
-            if (!moved && m==3) {
-                return false;
-            }
-            
-            if (!moved && m>=2) {
-                //System.out.println(state(board, m, turn));
-                return true;
-            }
-
 
             if (!whiteWins) {
                 return false;
