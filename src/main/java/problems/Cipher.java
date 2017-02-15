@@ -29,10 +29,10 @@ public class Cipher {
 					tmp ^= ans[i - 1];
 				}
 			} else if (i >= k && i <= c.length - k) {
-				tmp ^= ans[(i - k)];
-				tmp ^= ans[i - 1];
+				tmp ^= ans[(i - k)]; // Remove left-most
+				tmp ^= ans[i - 1]; // Take new element
 			} else {
-				tmp ^= ans[(i - k)];
+				tmp ^= ans[(i - k)]; // Remove left-most
 			}
 
 			if (c[i] == '0') {
