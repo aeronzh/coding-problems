@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+// https://www.hackerrank.com/contests/world-codesprint-10/challenges/zigzag-array
 public class ZigZagArray {
 	private static int solve(int n, int[] a) {
 		int ans = 0;
