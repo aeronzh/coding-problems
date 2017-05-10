@@ -26,7 +26,6 @@ public class SeparateTheNumbers {
 		return ans;
 	}
 
-	// 99100
 	private static long solve(String str, int startIdx, long prevNum, long diff) {
 		if (str.length() == 1) {
 			return -1;
