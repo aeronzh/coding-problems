@@ -11,12 +11,12 @@ import java.util.Set;
 
 /**
  * **Problem statement**
-A $latex 10 \times 10$ Crossword grid is provided to you, along with a set of words (or names of places) which need to be filled into the grid. 
-The cells in the grid are initially, either `+` signs or `-` signs. 
+A $latex 10 \times 10$ Crossword grid is provided to you, along with a set of words (or names of places) which need to be filled into the grid.
+The cells in the grid are initially, either `+` signs or `-` signs.
 Cells marked with a `+` have to be left as they are. Cells marked with a `-` need to be filled up with an appropriate character.
 
 **Input Format**
-The input contains $latex 10$ lines, each with $latex 10$ characters (which will be either `+` or `-` signs). 
+The input contains $latex 10$ lines, each with $latex 10$ characters (which will be either `+` or `-` signs).
 After this follows a set of words (typically nouns and names of places), separated by semi-colons (`;`).
 
 **Constraints**
@@ -76,7 +76,7 @@ AGRA;NORWAY;ENGLAND;GWALIOR
 +++++A++++
 ++++++++++
 
- * @author 
+ * @author
  *
  */
 public class CrosswordPuzzle {
@@ -204,7 +204,7 @@ public class CrosswordPuzzle {
 		for (int r = 0; r < 10; r++) {
 			for (int c = 0; c < 10; c++) {
 				if (board[r][c] == '-') {
-					// HORIZONTAL	
+					// HORIZONTAL
 					// Go all the way to the left
 					int start = c;
 					while (start > 0 && board[r][start - 1] == '-') {
@@ -212,7 +212,7 @@ public class CrosswordPuzzle {
 					}
 					h.add(new Integer[] { r, start });
 
-					// VERTICAL	
+					// VERTICAL
 					// Go all the way up
 					start = r;
 					while (start > 0 && board[start - 1][c] == '-') {
