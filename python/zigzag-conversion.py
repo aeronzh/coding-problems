@@ -41,13 +41,8 @@ class Solution(object):
         return ans
                 
 
-
-
-
 def main():
     solution = Solution()
-    print(solution.convert("PAYPALISHIRING", 2))
-
-    
+    print(solution.convert("PAYPALISHIRING", 2))   
 
 if __name__ == "__main__": main()
