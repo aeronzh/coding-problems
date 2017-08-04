@@ -18,12 +18,8 @@ class Solution(object):
         if n == nums[mid]:
             ans[0] = min(ans[0], mid)
             ans[1] = max(ans[1], mid)
-            self.search(nums, n, start, mid-1, ans)
-            self.search(nums, n, mid+1, end, ans)
-        elif n < nums[mid]:
-            self.search(nums, n, start, mid-1, ans)
-        else:
-            self.search(nums, n, mid+1, end, ans)
+        self.search(nums, n, start, mid-1, ans)
+        self.search(nums, n, mid+1, end, ans)
             
 
     def searchRange(self, nums, target):
@@ -35,7 +31,7 @@ class Solution(object):
         ans = [len(nums), -1]
         self.search(nums, target, 0, len(nums)-1, ans)
 
-        if ans[0]==len(nums) or ans[1]==-1:
+        if ans[0]==len(nums):
             return [-1,-1]
         return ans
 
